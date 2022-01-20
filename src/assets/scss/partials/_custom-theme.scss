@@ -1,0 +1,93 @@
+@use "@angular/material" as mat;
+@import "~@angular/material/theming";
+
+@include mat.core();
+
+// Custom Dark palette
+$custom-dark-theme: (
+  50: #ffffff,
+  100: #dde6f3,
+  200: #b4c9e4,
+  300: #7fa3d1,
+  400: #6992c9,
+  500: #1f1f1f,
+  600: #4072b4,
+  700: #38649d,
+  800: #305687,
+  900: #284770,
+  A100: #ffffff,
+  A200: #dde6f3,
+  A400: #6992c9,
+  A700: #38649d,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: white,
+  ),
+);
+
+$bv-palette-primary: mat-palette($custom-dark-theme);
+$bv-palette-accent: mat.define-palette(mat.$light-green-palette);
+$bv-theme: mat-light-theme($bv-palette-primary, $bv-palette-accent);
+
+// Light theme
+$light-primary: mat.define-palette(mat.$light-green-palette);
+$light-accent: mat.define-palette(mat.$light-green-palette);
+$light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $light-primary,
+      accent: $light-accent,
+    ),
+  )
+);
+
+// Dark theme
+$dark-primary: mat.define-palette(mat.$blue-gray-palette);
+$dark-accent: mat.define-palette(mat.$light-green-palette);
+$dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $dark-primary,
+      accent: $dark-accent,
+    ),
+  )
+);
+
+@include mat.core-theme($dark-theme);
+@include mat.button-theme($dark-theme);
+@include mat.toolbar-theme($bv-theme);
+@include mat.slide-toggle-theme($dark-theme);
+
+body {
+  background-color: #121212;
+  color: #fff;
+}
+
+mat-card {
+  background-color: #1d1d1d !important;
+  color: #fff !important;
+}
+
+.app-light-theme {
+  @include mat.all-component-colors($light-theme);
+
+  color: $black-87-opacity;
+  background-color: #e9e9e9;
+
+  mat-card {
+    background-color: #fff !important;
+    color: $black-87-opacity !important;
+  }
+}
