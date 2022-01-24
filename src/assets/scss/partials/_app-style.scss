@@ -1,0 +1,21 @@
+a, a:hover {
+  color: #dcedc8;
+  text-decoration: none;
+  transition: transform 100ms linear;
+}
+
+a:hover {
+  transform: translateY(-1px);
+  transition: transform 100ms linear;
+}
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0 30px #dcedc8 inset;
+  -webkit-box-shadow: 0 0 0 30px #dcedc8 inset;
+}
+
+.app-light-theme {
+  a, a:hover {
+    color: #7cb342;
+  }
+}
