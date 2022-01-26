@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Auth, createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Observable, throwError } from 'rxjs';
 import { FirebaseService } from '../services/firebase/firebase.service';
 
@@ -19,6 +19,7 @@ export class AuthService {
         const user = userCredential.user;
         observable.next(true);
         observable.complete();
+        console.log(user);
         // TODO: store data
       })
       .catch((error) => {
@@ -43,5 +44,9 @@ export class AuthService {
       const errorMessage = error.message;
       // ..
     });
+  }
+
+  public getFirebaseAuth() : Auth {
+    return this.auth;
   }
 }

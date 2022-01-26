@@ -7,12 +7,16 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { RelativeTimeStampPipe } from './pipes/relative-time-stamp/relative-time-stamp.pipe';
+import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
 
 
 
 @NgModule({
   declarations: [
-    LayoutComponent
+    LayoutComponent,
+    RelativeTimeStampPipe,
+    TimeStampPipe,
   ],
   imports: [
     CommonModule,
@@ -29,6 +33,8 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowserAnimationsModule,
     BrowserModule,
     RouterModule,
+    RelativeTimeStampPipe,
+    TimeStampPipe,
   ],
 })
 export class SharedModule { }

@@ -31,9 +31,8 @@
         </div>
 
 
-        <mat-card *ngIf="showDone" cdkDropList id="doneList"
-            [cdkDropListData]="doneNew" class="tasks-list" (cdkDropListDropped)="drop($event)"
-            [cdkDropListConnectedTo]="['todoList']">
+        <mat-card *ngIf="showDone" cdkDropList id="doneList" [cdkDropListData]="doneNew" class="tasks-list"
+            (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="['todoList']">
             <div @fadeAnimation *ngFor="let item of doneNew" cdkDrag class="todo-item">
                 <ng-container [ngTemplateOutlet]="todoItem" [ngTemplateOutletContext]="{item:item, done:true}">
                 </ng-container>
@@ -58,10 +57,15 @@
         <mat-checkbox [checked]="done" (change)="checkboxClick(item,done)"></mat-checkbox>
         <!-- <span class="todo-text">{{item.text}}</span>
         <span class="date-pill" *ngIf="item.deadline">{{getRelativeTime(item.deadline)}}</span> -->
-        
+
         <div style="width: 100%;">
             <span class="todo-text">{{item.text}}</span>
-            <div class="app-pill" style="margin-top: .5rem; width: fit-content; margin-left: .8rem;" *ngIf="item.deadline">{{getRelativeTime(item.deadline)}}</div>
+            <div class="app-pill" style="margin-top: .5rem; width: fit-content; margin-left: .8rem;"
+                *ngIf="item.deadline">
+                <!-- {{item.deadline | timeStamp }} -->
+                <ng-container *ngIf="done; else todoDateTime">{{item.deadline | timeStamp }}</ng-container>
+                <ng-template #todoDateTime>{{item.deadline | relativeTimeStamp }}</ng-template>
+            </div>
         </div>
     </div>
 </ng-template>
