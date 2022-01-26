@@ -1,5 +1,10 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@import "~@angular/material/theming";
+@import "./custom-theme";
+
 a, a:hover {
-  color: #dcedc8;
+  color: mat-color($dark-primary, 200);
   text-decoration: none;
   transition: transform 100ms linear;
 }
@@ -14,8 +19,16 @@ input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 30px #dcedc8 inset;
 }
 
-.app-light-theme {
-  a, a:hover {
-    color: #7cb342;
-  }
+mat-card {
+  background-color: mat-color($custom-dark-primary) !important;
+  color: #fff !important;
+  max-width: calc(100vw - 2rem);
+}
+
+.app-pill {
+  border-radius: 20px;
+  background-color: mat-color($custom-dark-primary, 400);
+  padding: 3px 10px;
+  white-space: nowrap;
+  margin-right: 1rem;
 }

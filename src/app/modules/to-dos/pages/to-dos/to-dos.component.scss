@@ -1,4 +1,6 @@
-.example-container {
+@import "../../../../../assets/scss/partials/custom-theme";
+
+.tasks-container {
   width: 600px;
   max-width: 100%;
   margin: 0 25px 25px 0;
@@ -6,18 +8,21 @@
   vertical-align: top;
 }
 
-.example-list {
-  // border: solid 1px #ccc;
+.tasks-list {
   min-height: 60px;
-  background-color: #1d1d1d;
   border-radius: 4px;
   overflow: hidden;
   display: block;
 }
 
-.item-wrapper {
+.task-list,
+.task-container,
+.todo-item {
+  background-color: mat-color($custom-dark-primary);
+}
+
+.task-wrapper {
   padding: 20px 10px;
-  // border-bottom: solid 1px #444444;
   color: #c4c4c4;
   display: flex;
   flex-direction: row;
@@ -25,7 +30,6 @@
   justify-content: space-between;
   box-sizing: border-box;
   overflow: hidden;
-  background-color: #1d1d1d;
   font-size: 14px;
   flex-grow: 1;
   cursor: pointer;
@@ -37,7 +41,7 @@
   }
 }
 
-.item-wrapper.done .todo-text {
+.task-wrapper.done .todo-text {
   text-decoration: line-through;
 }
 
@@ -56,19 +60,12 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.item-wrapper:last-child {
+.task-wrapper:last-child {
   border: none;
 }
 
-.example-list.cdk-drop-list-dragging .item-wrapper:not(.cdk-drag-placeholder) {
+.tasks-list.cdk-drop-list-dragging .task-wrapper:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.app-light-theme .example-list,
-.app-light-theme .todo-item,
-.app-light-theme .item-wrapper {
-  background: white;
-  color: black;
 }
 
 .chevron-icon {
@@ -88,19 +85,10 @@
   height: 24px;
 }
 
-.date-pill {
-  border-radius: 20px;
-  background-color: #585858;
-  padding: 3px 10px;
-  white-space: nowrap;
-  margin-right: 1rem;
-}
-
 .todo-item {
   cursor: default;
   overflow: hidden;
-  border-bottom: solid 1px #444444;
-  background-color: #1d1d1d;
+  border-bottom: solid 1px mat-color($grey-palette, 600);
   padding: 0 0.5rem;
   display: flex;
   align-items: center;
@@ -109,4 +97,18 @@
 
 .todo-item:last-child {
   border: none;
+}
+
+/* ------------------------------- light theme ------------------------------ */
+.app-light-theme {
+  .tasks-list,
+  .todo-item,
+  .task-wrapper {
+    background: white;
+    color: black;
+  }
+
+  .todo-item {
+    border-bottom-color: mat-color($grey-palette, 300);
+  }
 }

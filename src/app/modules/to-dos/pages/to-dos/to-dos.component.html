@@ -1,10 +1,10 @@
 <div fxLayout="column" fxLayoutAlign="center start" style="margin: 1rem;" fxLayout.gt-md="row">
-    <div class="example-container">
+    <div class="tasks-container">
         <div class="list-title">
             <span class="list-title">To do</span>
         </div>
 
-        <mat-card cdkDropList id="todoList" [cdkDropListData]="todoNew" class="example-list"
+        <mat-card cdkDropList id="todoList" [cdkDropListData]="todoNew" class="tasks-list"
             (cdkDropListDropped)="drop($event)" [cdkDropListConnectedTo]="['doneList']">
             <div *ngIf="todoNew.length === 0">Nothing to do here</div>
             <div @fadeAnimation *ngFor="let item of todoNew" cdkDrag class="todo-item">
@@ -14,7 +14,7 @@
             </div>
             <!-- <div @fadeAnimation *ngFor="let item of todoNew" cdkDrag
                 style="cursor: default; overflow: hidden; border-bottom: solid 1px #444444;">
-                <div class="item-wrapper" @fadeAnimation cdkDrag style="cursor: default;">
+                <div class="task-wrapper" @fadeAnimation cdkDrag style="cursor: default;">
                     <mat-checkbox [checked]="false" (change)="checkboxClick(item,false)"></mat-checkbox>
                     <span style="text-align: left; width: 100%; margin-left: 1rem;">{{item.text}}</span>
                     <mat-icon cdkDragHandle style="cursor: move;">drag_handle</mat-icon>
@@ -23,7 +23,7 @@
         </mat-card>
     </div>
 
-    <div class="example-container">
+    <div class="tasks-container">
         <div fxLayout="row" fxLayoutAlign="space-between center" class="list-title" style="cursor: pointer;"
             (click)="showDone = ! showDone">
             <span class="">Done ({{doneNew.length}})</span>
@@ -32,7 +32,7 @@
 
 
         <mat-card *ngIf="showDone" cdkDropList id="doneList"
-            [cdkDropListData]="doneNew" class="example-list" (cdkDropListDropped)="drop($event)"
+            [cdkDropListData]="doneNew" class="tasks-list" (cdkDropListDropped)="drop($event)"
             [cdkDropListConnectedTo]="['todoList']">
             <div @fadeAnimation *ngFor="let item of doneNew" cdkDrag class="todo-item">
                 <ng-container [ngTemplateOutlet]="todoItem" [ngTemplateOutletContext]="{item:item, done:true}">
@@ -41,7 +41,7 @@
             </div>
             <!-- <div @fadeAnimation *ngFor="let item of doneNew" cdkDrag
                 style="cursor: default; overflow: hidden; border-bottom: solid 1px #444444;">
-                <div class="item-wrapper">
+                <div class="task-wrapper">
                     <mat-checkbox [checked]="true" (change)="checkboxClick(item,true)"></mat-checkbox>
                     <span
                         style="text-align: left; width: 100%; text-decoration: line-through; margin-left: 1rem;">{{item.text}}</span>
@@ -54,14 +54,14 @@
 </div>
 
 <ng-template #todoItem let-item='item' let-done='done'>
-    <div class="item-wrapper" [class.done]="done">
+    <div class="task-wrapper" [class.done]="done">
         <mat-checkbox [checked]="done" (change)="checkboxClick(item,done)"></mat-checkbox>
         <!-- <span class="todo-text">{{item.text}}</span>
         <span class="date-pill" *ngIf="item.deadline">{{getRelativeTime(item.deadline)}}</span> -->
         
         <div style="width: 100%;">
             <span class="todo-text">{{item.text}}</span>
-            <div class="date-pill" style="margin-top: .5rem; width: fit-content; margin-left: .8rem;" *ngIf="item.deadline">{{getRelativeTime(item.deadline)}}</div>
+            <div class="app-pill" style="margin-top: .5rem; width: fit-content; margin-left: .8rem;" *ngIf="item.deadline">{{getRelativeTime(item.deadline)}}</div>
         </div>
     </div>
 </ng-template>
