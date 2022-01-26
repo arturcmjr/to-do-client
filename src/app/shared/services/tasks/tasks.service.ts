@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@shared/auth/auth.service';
 import { User } from 'firebase/auth';
-import { Database, onValue, ref, set } from 'firebase/database';
+import { Database, onValue, ref, set, update } from 'firebase/database';
 import { Observable } from 'rxjs';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ITask } from './tasks.interface';
