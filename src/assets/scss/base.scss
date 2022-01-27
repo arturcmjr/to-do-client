@@ -1,6 +1,8 @@
+@use "@angular/material" as mat;
 @use "./partials/app-style";
 @use "./partials/app-light-style";
-@use "./partials/custom-theme";
+@use "./partials/app-theme" as app-theme;
+
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

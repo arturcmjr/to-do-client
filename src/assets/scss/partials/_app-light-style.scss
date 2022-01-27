@@ -1,19 +1,27 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@import "~@angular/material/theming";
-@import "./custom-theme";
+@use "./app-theme" as theme;
+
+
+
+.app-light-theme {
+  @include mat.all-component-colors(theme.$light-theme);
+
+  color: theme.$black-87-opacity !important;
+  background-color: theme.mat-color(theme.$grey-palette, 100) !important;
+}
 
 .app-light-theme {
   a, a:hover {
-    color: mat-color($light-primary, default);
+    color: theme.mat-color(theme.$light-primary, default);
   }
 
   mat-card {
     background-color: #fff !important;
-    color: $black-87-opacity !important;
+    color: theme.$dark-font !important;
   }
 
   .app-pill {
-    background-color: mat-color($grey-palette, 200);
+    background-color: theme.mat-color(theme.$grey-palette, 200);
   }
 }

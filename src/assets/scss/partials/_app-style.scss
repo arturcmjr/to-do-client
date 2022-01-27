@@ -1,10 +1,20 @@
 @use 'sass:map';
 @use '@angular/material' as mat;
-@import "~@angular/material/theming";
-@import "./custom-theme";
+@use "./app-theme" as theme;
+
+
+
+@include mat.all-component-themes(theme.$dark-theme);
+@include mat.toolbar-theme(theme.$custom-dark-theme);
+@include mat.snack-bar-theme(theme.$custom-dark-theme);
+
+body {
+  color: #fff !important;
+  background-color : theme.mat-color(theme.$custom-dark-primary, 900) !important;
+}
 
 a, a:hover {
-  color: mat-color($dark-primary, 200);
+  color: theme.mat-color(theme.$dark-primary, 200);
   text-decoration: none;
   transition: transform 100ms linear;
 }
@@ -20,14 +30,14 @@ input:-webkit-autofill {
 }
 
 mat-card {
-  background-color: mat-color($custom-dark-primary) !important;
-  color: #fff !important;
+  background-color: theme.mat-color(theme.$custom-dark-primary) !important;
+  color: theme.$dark-font !important;
   max-width: calc(100vw - 2rem);
 }
 
 .app-pill {
   border-radius: 20px;
-  background-color: mat-color($custom-dark-primary, 400);
+  background-color: theme.mat-color(theme.$custom-dark-primary, 400);
   padding: 3px 10px;
   white-space: nowrap;
   margin-right: 1rem;

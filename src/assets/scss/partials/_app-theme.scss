@@ -3,6 +3,9 @@
 
 @include mat.core();
 
+$dark-font: $white-87-opacity;
+$light-font: $black-87-opacity;
+
 // Custom Dark palette
 $custom-dark-palette: (
   50: #ffffff,
@@ -71,18 +74,3 @@ $dark-theme: mat.define-dark-theme(
   )
 );
 
-@include mat.all-component-themes($dark-theme);
-@include mat.toolbar-theme($custom-dark-theme);
-@include mat.snack-bar-theme($custom-dark-theme);
-
-body {
-  color: #fff !important;
-  background-color : mat-color($custom-dark-primary, 900) !important;
-}
-
-.app-light-theme {
-  @include mat.all-component-colors($light-theme);
-
-  color: $black-87-opacity !important;
-  background-color: mat-color($grey-palette, 100) !important;
-}

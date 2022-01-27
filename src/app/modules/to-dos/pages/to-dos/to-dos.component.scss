@@ -1,4 +1,4 @@
-@import "../../../../../assets/scss/partials/custom-theme";
+@use "../../../../../assets/scss/partials/app-theme" as theme;
 
 .tasks-container {
   width: 600px;
@@ -18,7 +18,7 @@
 .task-list,
 .task-container,
 .todo-item {
-  background-color: mat-color($custom-dark-primary);
+  background-color: theme.mat-color(theme.$custom-dark-primary);
 }
 
 .task-wrapper {
@@ -88,7 +88,7 @@
 .todo-item {
   cursor: default;
   overflow: hidden;
-  border-bottom: solid 1px mat-color($grey-palette, 600);
+  border-bottom: solid 1px theme.mat-color(theme.$grey-palette, 600);
   padding: 0 0.5rem;
   display: flex;
   align-items: center;
@@ -109,6 +109,6 @@
   }
 
   .todo-item {
-    border-bottom-color: mat-color($grey-palette, 300);
+    border-bottom-color: theme.mat-color(theme.$grey-palette, 300);
   }
 }
