@@ -6,6 +6,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import {
   animate,
+  keyframes,
   query,
   stagger,
   style,
@@ -18,6 +19,8 @@ import { ref, set } from 'firebase/database';
 import { AuthService } from '@shared/auth/auth.service';
 import { TasksService } from '@shared/services/tasks/tasks.service';
 import { ITask } from '@shared/services/tasks/tasks.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ToDoDialogComponent } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':enter', [
@@ -41,22 +44,46 @@ export class ToDosComponent implements OnInit {
   public todoNew: ITask[] = [];
   public doneNew: ITask[] = [];
   public showDone = false;
+  public disableListAnimation = false;
 
-  constructor(private tasksService: TasksService) {}
+  constructor(private tasksService: TasksService, private dialog: MatDialog) {}
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ToDoDialogComponent, {
+      width: '350px',
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result.text) {
+        this.tasksService.createTodo(result.text).subscribe((task) => {
+          this.todoNew.push(task);
+          // TODO: DRY
+          const ids = this.todoNew.map((x) => x.id);
+          this.tasksService.orderTodo(ids).subscribe();
+        });
+      }
+      console.log('The dialog was closed');
+      // this.animal = result;
+    });
+  }
 
   // todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
 
   // done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
 
-  drop(event: CdkDragDrop<ITask[]>) {
+  public drop(event: CdkDragDrop<ITask[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      this.tasksService.setTasks(this.todoNew,false);
-      this.tasksService.setTasks(this.doneNew,true);
+      const ids = this.todoNew.map((x) => x.id);
+      this.tasksService.orderTodo(ids).subscribe(() => console.log('done'));
+      // this.tasksService.setTasks(this.todoNew, false);
+      // this.tasksService.setTasks(this.doneNew, true);
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -65,8 +92,8 @@ export class ToDosComponent implements OnInit {
         event.currentIndex
       );
       console.log(this.doneNew);
-      this.tasksService.setTasks(this.todoNew,false);
-      this.tasksService.setTasks(this.doneNew,true);
+      // this.tasksService.setTasks(this.todoNew, false);
+      // this.tasksService.setTasks(this.doneNew, true);
     }
   }
 
@@ -80,13 +107,35 @@ export class ToDosComponent implements OnInit {
       //   [{ text: 'Caminhar com as cachorras' }, { text: 'Soltar um pum' }],
       //   false
       // );
-      this.tasksService.getTasks(true).subscribe(tasks => {
-        this.doneNew = tasks || [];
-      });
-      this.tasksService.getTasks(false).subscribe(tasks => {
-        this.todoNew = tasks || [];
+      // this.tasksService.addTodo('Bom dia Maya!').subscribe((task) => {
+      //   this.todoNew.push(task);
+      //   console.log(task);
+      // });
+      // this.tasksService.getTasks(true).subscribe(tasks => {
+      //   // this.doneNew = tasks || [];
+      //   console.log(tasks);
+      // });
+      this.tasksService.getTodo().subscribe((toDos) => {
+        console.log(toDos);
+        this.todoNew = toDos;
+        // this.todoNew = tasks || [];
+        // console.log(Object.values(tasks));
+        // console.log(tasks);
+        // for (let task in tasks) {
+        //   console.log(task,tasks[task]);
+        // }
       });
     }, 1000);
+  }
+
+  public onDragBegin() : void {
+    this.disableListAnimation = true;
+  }
+
+  public onDragEnd() : void {
+    window.setTimeout(() => {
+      this.disableListAnimation = false;
+    });
   }
 
   public checkboxClick(item: ITask, todo: boolean): void {

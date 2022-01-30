@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>ToDo</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="standard" class="w-100">
+    <mat-label>Text</mat-label>
+    <input matInput [(ngModel)]="data.text">
+  </mat-form-field>
+  <mat-form-field appearance="standard" class="w-100">
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="picker">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker [touchUi]="true" #picker></mat-datepicker>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="w-100">
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>

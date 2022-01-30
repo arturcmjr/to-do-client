@@ -9,7 +9,9 @@ import { FirebaseService } from '../services/firebase/firebase.service';
 export class AuthService {
   private auth = getAuth();
 
-  constructor(private firebase: FirebaseService) {}
+  constructor(private firebase: FirebaseService) {
+    // console.log(this.auth.log);
+  }
 
   public login(email: string, password: string) : Observable<boolean> {
     return new Observable<boolean>((observable) => {
