@@ -21,6 +21,10 @@
     color: theme.$light-font !important;
   }
 
+  mat-toolbar {
+    background-color: theme.mat-color(theme.$light-primary) !important;
+  }
+
   .app-pill {
     background-color: theme.mat-color(theme.$grey-palette, 200);
   }

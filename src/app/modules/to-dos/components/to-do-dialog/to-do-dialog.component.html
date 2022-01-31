@@ -1,5 +1,5 @@
 <div mat-dialog-title class="d-flex justify-content-between">
-  <h1>ToDo</h1>
+  <h2>{{title}}</h2>
   <button mat-icon-button aria-label="Delete icon" *ngIf="data.id" (click)="onDeleteClick()">
     <mat-icon>delete_outline</mat-icon>
   </button>
@@ -15,7 +15,7 @@
     <mat-label>Date</mat-label>
     <input matInput [matDatepicker]="picker" formControlName="date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker [touchUi]="true" #picker></mat-datepicker>
+    <mat-datepicker [touchUi]="isMobile()" #picker></mat-datepicker>
     <mat-error *ngIf="formHasError('date','matDatepickerParse')">Date is not valid</mat-error>
   </mat-form-field>
 </div>

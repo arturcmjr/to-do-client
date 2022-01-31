@@ -37,7 +37,7 @@
   color: #c4c4c4;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   box-sizing: border-box;
   overflow: hidden;
@@ -46,7 +46,7 @@
 
   .todo-text {
     text-align: left;
-    width: 100%;
+    flex-grow: 1;
     margin-left: 1rem;
   }
 }
@@ -101,8 +101,13 @@
   border-bottom: solid 1px theme.mat-color(theme.$grey-palette, 600);
   padding: 0 0.5rem;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
+
+  .drag-handle {
+    cursor: move;
+    margin-top: 1rem;
+  }
 }
 
 .todo-item:last-child {

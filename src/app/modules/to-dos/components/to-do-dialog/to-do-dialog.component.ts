@@ -1,7 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { isMobileDevice } from '@shared/helpers/others/is-mobile-device';
 import { ITask } from '@shared/services/tasks/tasks.interface';
+
+export interface ITasksDialogResult {
+  category: 'create' | 'update' | 'delete';
+  taskId: string;
+  text?: string;
+  date?: Date;
+}
 
 @Component({
   selector: 'app-to-do-dialog',
@@ -9,6 +17,7 @@ import { ITask } from '@shared/services/tasks/tasks.interface';
   styleUrls: ['./to-do-dialog.component.scss'],
 })
 export class ToDoDialogComponent {
+  public title: string;
   public taskForm = new FormGroup({
     text: new FormControl(null, Validators.required),
     date: new FormControl(),
@@ -20,6 +29,7 @@ export class ToDoDialogComponent {
   ) {
     this.taskForm.get('text')?.setValue(data?.text);
     this.taskForm.get('date')?.setValue(data?.date);
+    this.title = data?.id? 'Edit Task' : 'Create Task';
   }
 
   public onSaveClick(): void {
@@ -29,15 +39,25 @@ export class ToDoDialogComponent {
       return;
     }
     const { text, date } = this.taskForm.value;
-    this.dialogRef.close({ text, date, id: this.data?.id });
+    const data: ITasksDialogResult = {
+      taskId: this.data.id,
+      category: this.data?.id ? 'update' : 'create',
+      text,
+      date,
+    };
+    this.dialogRef.close(data);
   }
 
   public onCancelClick(): void {
     this.dialogRef.close();
   }
 
-  public onDeleteClick() : void {
-    this.dialogRef.close({delete: this.data.id});
+  public onDeleteClick(): void {
+    const data: ITasksDialogResult = {
+      taskId: this.data.id,
+      category: 'delete',
+    };
+    this.dialogRef.close(data);
   }
 
   public formHasError(controlName: string, error?: string): boolean {
@@ -46,5 +66,9 @@ export class ToDoDialogComponent {
       (control.touched || control.dirty) &&
       (error ? control.hasError(error) : control.invalid)
     );
+  }
+
+  public isMobile(): boolean {
+    return isMobileDevice();
   }
 }

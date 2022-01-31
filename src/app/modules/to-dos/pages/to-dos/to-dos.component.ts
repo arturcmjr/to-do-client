@@ -20,8 +20,12 @@ import { AuthService } from '@shared/auth/auth.service';
 import { TasksService } from '@shared/services/tasks/tasks.service';
 import { ITask } from '@shared/services/tasks/tasks.interface';
 import { MatDialog } from '@angular/material/dialog';
-import { ToDoDialogComponent } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
+import {
+  ITasksDialogResult,
+  ToDoDialogComponent,
+} from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
 import { combineLatest } from 'rxjs';
+import { isMobileDevice } from '@shared/helpers/others/is-mobile-device';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':enter', [
@@ -55,30 +59,63 @@ export class ToDosComponent implements OnInit {
       width: '350px',
       data: { ...task },
     });
+    dialogRef.afterClosed().subscribe((data) => this.onDialogClose(data));
+  }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-      if (result?.text) {
-        this.tasksService
-          .createTodo(result.text, result.date)
-          .subscribe((task) => {
-            this.todo.unshift(task);
-            this.saveOrder(false);
-          });
+  private onDialogClose(data: ITasksDialogResult | null): void {
+    if (data) {
+      switch (data.category) {
+        case 'create':
+          console.log('create');
+          this.onTaskCreate(data);
+          break;
+        case 'update':
+          this.onTaskUpdate(data);
+          break;
+        case 'delete':
+          this.onTaskDelete(data);
+          break;
       }
-      else if(result?.delete) {
-        const uid: string = result.delete;
-        const done = !!this.done.find(t => t.id === uid);
-        this.tasksService.deleteTask(uid,done).subscribe(() => {
-          const tasks = done? this.done : this.todo;
-          const found = tasks.find(t => t.id === uid);
-          const index = found? tasks.indexOf(found) : -1;
-          tasks.splice(index,1);
-        });
-      }
-      console.log('The dialog was closed');
-      // this.animal = result;
+    }
+  }
+
+  private onTaskCreate(data: ITasksDialogResult): void {
+    if (!data.text) return;
+    this.tasksService.createTodo(data.text, data.date).subscribe((task) => {
+      this.todo.unshift(task);
+      this.saveOrder(false);
     });
+  }
+
+  private onTaskUpdate(data: ITasksDialogResult): void {
+    const done = this.taskIsDone(data.taskId);
+    if (!data.text) return;
+    this.tasksService
+      .updateTask(done, data.taskId, data.text, data.date)
+      .subscribe(() => {
+        const tasks = done ? this.done : this.todo;
+        const found = tasks.find((t) => t.id === data.taskId);
+        if (found && data.text) {
+          found.text = data.text;
+          found.date = data.date;
+        }
+      });
+  }
+
+  private onTaskDelete(data: ITasksDialogResult): void {
+    const done = this.taskIsDone(data.taskId);
+    this.tasksService.deleteTask(data.taskId, done).subscribe(() => {
+      const tasks = done ? this.done : this.todo;
+      const found = tasks.find((t) => t.id === data.taskId);
+      if (found) {
+        const index = tasks.indexOf(found);
+        tasks.splice(index, 1);
+      }
+    });
+  }
+
+  private taskIsDone(taskId: string): boolean {
+    return !!this.done.find((t) => t.id === taskId);
   }
 
   private fetchData(): void {

@@ -26,7 +26,7 @@ describe('ToDosComponent', () => {
   });
 
   it('should call openDialog', () => {
-    const fixture = TestBed.createComponent(ToDosComponent);
+    // const fixture = TestBed.createComponent(ToDosComponent);
     const app = fixture.componentInstance;
     const expected_header = "ToDo";
     app.openDialog();

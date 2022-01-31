@@ -1,0 +1,19 @@
+$navbar-height: 57px;
+
+mat-toolbar {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  z-index: 9999;
+  height: $navbar-height;
+}
+
+.page-wrapper {
+  width: 100vw;
+  height: calc(100vh - #{$navbar-height});
+  margin: 0;
+  padding: 0;
+  top: $navbar-height;
+  overflow-y: auto;
+  position: absolute;
+}

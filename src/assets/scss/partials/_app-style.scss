@@ -35,6 +35,10 @@ mat-card {
   max-width: calc(100vw - 2rem);
 }
 
+mat-toolbar {
+  background-color: lighten(theme.mat-color(theme.$custom-dark-primary), 10%) !important;
+}
+
 .app-pill {
   border-radius: 20px;
   background-color: theme.mat-color(theme.$custom-dark-primary, 400);

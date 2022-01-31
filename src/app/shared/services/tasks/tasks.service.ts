@@ -44,14 +44,25 @@ export class TasksService {
     });
   }
 
-  // public setTasks(tasks: ITask[], done: boolean): void {
-  //   if (!this.user) return;
-  //   // TODO: handle error
-  //   set(
-  //     ref(this.database, `tasks/${this.user?.uid}/${done ? 'done' : 'todo'}`),
-  //     tasks
-  //   );
-  // }
+  public updateTask(done: boolean, taskId: string, text: string, date?: Date): Observable<void> {
+    return new Observable<void>((observable) => {
+      const tasksRef = ref(this.database, `${this.getDbTasksPath(done)}/${taskId}`);
+
+      const updates: any = {};
+      updates['text'] = text;
+      updates['date'] = date? this.getEpochUtc(date) : null;
+      console.log(updates);
+
+      update(tasksRef, updates)
+        .then(() => {
+          observable.next();
+          observable.complete();
+        })
+        .catch((error: any) => {
+          observable.error(error);
+        });
+    });
+  }
 
   public getTodo(): Observable<ITask[]> {
     return this.getTasks(false);
@@ -59,6 +70,26 @@ export class TasksService {
 
   public getDone(): Observable<ITask[]> {
     return this.getTasks(true);
+  }
+
+  private getTasks(done: boolean): Observable<ITask[]> {
+    return new Observable<ITask[]>((observable) => {
+      const tasksRef = ref(this.database, this.getDbTasksPath(done));
+      onValue(
+        tasksRef,
+        (snapshot) => {
+          const data = snapshot.val();
+          const tasks = this.getTasksFromDb(data);
+          if (tasks.length === 0) console.log(tasksRef);
+          observable.next(tasks);
+          observable.complete();
+        },
+        (err) => {
+          console.log(err);
+          // TODO: handle error
+        }
+      );
+    });
   }
 
   public deleteTask(taskId: string, done: boolean): Observable<void> {
@@ -112,26 +143,6 @@ export class TasksService {
     });
   }
 
-  private getTasks(done: boolean): Observable<ITask[]> {
-    return new Observable<ITask[]>((observable) => {
-      const tasksRef = ref(this.database, this.getDbTasksPath(done));
-      onValue(
-        tasksRef,
-        (snapshot) => {
-          const data = snapshot.val();
-          const tasks = this.getTasksFromDb(data);
-          if (tasks.length === 0) console.log(tasksRef);
-          observable.next(tasks);
-          observable.complete();
-        },
-        (err) => {
-          console.log(err);
-          // TODO: handle error
-        }
-      );
-    });
-  }
-
   private getDbTasksPath(done: boolean): string {
     return `tasks/${this.auth.getUserUid()}/${done ? 'done' : 'todo'}`;
   }
@@ -151,6 +162,12 @@ export class TasksService {
   }
 
   private getDbTask(task: ITask): IDbTask {
+    console.log('has date',!!task.date);
+    console.log({
+      text: task.text,
+      order: task.order,
+      date: task.date ? this.getEpochUtc(task.date) : null,
+    });
     return {
       text: task.text,
       order: task.order,
