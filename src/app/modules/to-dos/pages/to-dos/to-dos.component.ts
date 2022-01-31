@@ -21,6 +21,7 @@ import { TasksService } from '@shared/services/tasks/tasks.service';
 import { ITask } from '@shared/services/tasks/tasks.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { ToDoDialogComponent } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
+import { combineLatest } from 'rxjs';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':enter', [
@@ -41,27 +42,38 @@ export const fadeAnimation = trigger('fadeAnimation', [
   animations: [fadeAnimation],
 })
 export class ToDosComponent implements OnInit {
-  public todoNew: ITask[] = [];
-  public doneNew: ITask[] = [];
+  public todo: ITask[] = [];
+  public done: ITask[] = [];
   public showDone = false;
   public disableListAnimation = false;
+  public isLoading = false;
 
   constructor(private tasksService: TasksService, private dialog: MatDialog) {}
 
-  openDialog(): void {
+  public openDialog(task?: ITask): void {
     const dialogRef = this.dialog.open(ToDoDialogComponent, {
       width: '350px',
-      data: {},
+      data: { ...task },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);
-      if (result.text) {
-        this.tasksService.createTodo(result.text).subscribe((task) => {
-          this.todoNew.push(task);
-          // TODO: DRY
-          const ids = this.todoNew.map((x) => x.id);
-          this.tasksService.orderTodo(ids).subscribe();
+      if (result?.text) {
+        this.tasksService
+          .createTodo(result.text, result.date)
+          .subscribe((task) => {
+            this.todo.unshift(task);
+            this.saveOrder(false);
+          });
+      }
+      else if(result?.delete) {
+        const uid: string = result.delete;
+        const done = !!this.done.find(t => t.id === uid);
+        this.tasksService.deleteTask(uid,done).subscribe(() => {
+          const tasks = done? this.done : this.todo;
+          const found = tasks.find(t => t.id === uid);
+          const index = found? tasks.indexOf(found) : -1;
+          tasks.splice(index,1);
         });
       }
       console.log('The dialog was closed');
@@ -69,19 +81,33 @@ export class ToDosComponent implements OnInit {
     });
   }
 
-  // todo = ['Get to work', 'Pick up groceries', 'Go home', 'Fall asleep'];
+  private fetchData(): void {
+    const toDo = this.tasksService.getTodo();
+    const done = this.tasksService.getDone();
 
-  // done = ['Get up', 'Brush teeth', 'Take a shower', 'Check e-mail', 'Walk dog'];
+    this.isLoading = true;
+    combineLatest([toDo, done]).subscribe(([toDoTasks, doneTasks]) => {
+      this.todo = toDoTasks;
+      this.done = doneTasks;
+      this.isLoading = false;
+    });
+  }
+
+  private saveOrder(done: boolean): void {
+    const ids = done ? this.done.map((x) => x.id) : this.todo.map((x) => x.id);
+    this.tasksService.orderTasks(ids, done).subscribe();
+  }
 
   public drop(event: CdkDragDrop<ITask[]>): void {
+    console.log(event.container.id);
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      const ids = this.todoNew.map((x) => x.id);
-      this.tasksService.orderTodo(ids).subscribe(() => console.log('done'));
+      this.saveOrder(true);
+      this.saveOrder(false);
       // this.tasksService.setTasks(this.todoNew, false);
       // this.tasksService.setTasks(this.doneNew, true);
     } else {
@@ -91,70 +117,34 @@ export class ToDosComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      console.log(this.doneNew);
+      console.log(this.done);
       // this.tasksService.setTasks(this.todoNew, false);
       // this.tasksService.setTasks(this.doneNew, true);
     }
   }
 
-  ngOnInit(): void {
-    // throw new Error('Method not implemented.');
-    window.setTimeout(() => {
-      // const data = { text: 'Bom dia', deadline: Date.now() };
-      // console.log(data);
-      // this.tasksService.setTasks([data], true);
-      // this.tasksService.setTasks(
-      //   [{ text: 'Caminhar com as cachorras' }, { text: 'Soltar um pum' }],
-      //   false
-      // );
-      // this.tasksService.addTodo('Bom dia Maya!').subscribe((task) => {
-      //   this.todoNew.push(task);
-      //   console.log(task);
-      // });
-      // this.tasksService.getTasks(true).subscribe(tasks => {
-      //   // this.doneNew = tasks || [];
-      //   console.log(tasks);
-      // });
-      this.tasksService.getTodo().subscribe((toDos) => {
-        console.log(toDos);
-        this.todoNew = toDos;
-        // this.todoNew = tasks || [];
-        // console.log(Object.values(tasks));
-        // console.log(tasks);
-        // for (let task in tasks) {
-        //   console.log(task,tasks[task]);
-        // }
-      });
-    }, 1000);
+  public ngOnInit(): void {
+    this.fetchData();
   }
 
-  public onDragBegin() : void {
+  public onDragBegin(): void {
     this.disableListAnimation = true;
   }
 
-  public onDragEnd() : void {
+  public onDragEnd(): void {
     window.setTimeout(() => {
       this.disableListAnimation = false;
     });
   }
 
-  public checkboxClick(item: ITask, todo: boolean): void {
+  public checkboxClick(item: ITask, done: boolean): void {
     console.log(item);
+    this.tasksService.markTaskAs(item, done).subscribe();
     window.setTimeout(() => {
-      if (todo) {
-        transferArrayItem(
-          this.doneNew,
-          this.todoNew,
-          this.doneNew.indexOf(item),
-          0
-        );
+      if (!done) {
+        transferArrayItem(this.done, this.todo, this.done.indexOf(item), 0);
       } else {
-        transferArrayItem(
-          this.todoNew,
-          this.doneNew,
-          this.todoNew.indexOf(item),
-          0
-        );
+        transferArrayItem(this.todo, this.done, this.todo.indexOf(item), 0);
       }
     }, 0);
   }

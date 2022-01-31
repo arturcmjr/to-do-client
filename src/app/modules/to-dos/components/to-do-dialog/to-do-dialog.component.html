@@ -1,17 +1,25 @@
-<h1 mat-dialog-title>ToDo</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="standard" class="w-100">
+<div mat-dialog-title class="d-flex justify-content-between">
+  <h1>ToDo</h1>
+  <button mat-icon-button aria-label="Delete icon" *ngIf="data.id" (click)="onDeleteClick()">
+    <mat-icon>delete_outline</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content [formGroup]="taskForm">
+  <mat-form-field appearance="standard" class="w-100" [hideRequiredMarker]="true">
     <mat-label>Text</mat-label>
-    <input matInput [(ngModel)]="data.text">
+    <input matInput formControlName="text" autocomplete="off">
+    <mat-error *ngIf="formHasError('text','required')">Text is required</mat-error>
   </mat-form-field>
   <mat-form-field appearance="standard" class="w-100">
     <mat-label>Date</mat-label>
-    <input matInput [matDatepicker]="picker">
+    <input matInput [matDatepicker]="picker" formControlName="date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker [touchUi]="true" #picker></mat-datepicker>
+    <mat-error *ngIf="formHasError('date','matDatepickerParse')">Date is not valid</mat-error>
   </mat-form-field>
 </div>
-<div mat-dialog-actions class="w-100">
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+<div mat-dialog-actions class="w-100 d-flex justify-content-end">
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Save</button>
 </div>

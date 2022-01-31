@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@shared/auth/auth.service';
-import { User } from 'firebase/auth';
 import {
   child,
   Database,
   onValue,
   push,
   ref,
+  remove,
   set,
   update,
 } from 'firebase/database';
-import { observable, Observable, EMPTY } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FirebaseService } from '../firebase/firebase.service';
 import { IDbTask, ITask } from './tasks.interface';
 
@@ -19,22 +19,22 @@ import { IDbTask, ITask } from './tasks.interface';
 })
 export class TasksService {
   private database: Database;
-  private user: User | null = null;
+  // private user: User | null = null;
 
   constructor(private firebase: FirebaseService, private auth: AuthService) {
     this.database = firebase.getDataBase();
-    const fbAuth = auth.getFirebaseAuth();
-    fbAuth.onAuthStateChanged((user) => (this.user = user));
+    // const fbAuth = auth.getFirebaseAuth();
+    // fbAuth.onAuthStateChanged((user) => (this.user = user));
   }
 
   public createTodo(text: string, date?: Date): Observable<ITask> {
     return new Observable<ITask>((observable) => {
-      const dbRef = ref(this.database, `tasks/${this.user?.uid}/todo`);
-      const epochDate = date?.getTime();
+      const dbRef = ref(this.database, `tasks/${this.auth.getUserUid()}/todo`);
+      const epochDate = date ? this.getEpochUtc(date) : undefined;
       push(dbRef, { text, date: epochDate ?? null, order: 0 }).then((task) => {
         observable.next({
           text,
-          date: epochDate,
+          date,
           id: task.key ?? '',
           order: 0,
         });
@@ -61,15 +61,22 @@ export class TasksService {
     return this.getTasks(true);
   }
 
-  public orderTodo(ids: string[]): Observable<void> {
-    return this.orderTasks(ids, false);
+  public deleteTask(taskId: string, done: boolean): Observable<void> {
+    return new Observable<void>((observable) => {
+      const tasksRef = ref(
+        this.database,
+        `${this.getDbTasksPath(done)}/${taskId}`
+      );
+
+      remove(tasksRef).then(() => {
+        observable.next();
+        observable.complete();
+      });
+      // TODO: handle error
+    });
   }
 
-  public orderDone(ids: string[]): Observable<void> {
-    return this.orderTasks(ids, true);
-  }
-
-  private orderTasks(ids: string[], done: boolean): Observable<void> {
+  public orderTasks(ids: string[], done: boolean): Observable<void> {
     return new Observable<void>((observable) => {
       const tasksRef = ref(this.database, this.getDbTasksPath(done));
 
@@ -87,6 +94,24 @@ export class TasksService {
     });
   }
 
+  public markTaskAs(task: ITask, done: boolean): Observable<void> {
+    return new Observable<void>((observable) => {
+      const dbRef = ref(this.database, `tasks/${this.auth.getUserUid()}`);
+      const currentContainer = done ? 'todo' : 'done';
+      const targetContainer = done ? 'done' : 'todo';
+
+      const updates: any = {};
+      updates[`${currentContainer}/${task.id}`] = null;
+      updates[`${targetContainer}/${task.id}`] = this.getDbTask(task);
+
+      update(dbRef, updates).then(() => {
+        observable.next();
+        observable.complete();
+      });
+      // TODO: handle error
+    });
+  }
+
   private getTasks(done: boolean): Observable<ITask[]> {
     return new Observable<ITask[]>((observable) => {
       const tasksRef = ref(this.database, this.getDbTasksPath(done));
@@ -95,6 +120,7 @@ export class TasksService {
         (snapshot) => {
           const data = snapshot.val();
           const tasks = this.getTasksFromDb(data);
+          if (tasks.length === 0) console.log(tasksRef);
           observable.next(tasks);
           observable.complete();
         },
@@ -107,7 +133,7 @@ export class TasksService {
   }
 
   private getDbTasksPath(done: boolean): string {
-    return `tasks/${this.user?.uid}/${done ? 'done' : 'todo'}`;
+    return `tasks/${this.auth.getUserUid()}/${done ? 'done' : 'todo'}`;
   }
 
   private getTasksFromDb(data: IDbTask[]): ITask[] {
@@ -118,9 +144,26 @@ export class TasksService {
         id: key,
         text: item.text,
         order: item.order,
-        date: item.date,
+        date: item.date ? this.getLocalDate(item.date) : undefined,
       });
     }
     return tasks.sort((a, b) => a.order - b.order);
+  }
+
+  private getDbTask(task: ITask): IDbTask {
+    return {
+      text: task.text,
+      order: task.order,
+      date: task.date ? this.getEpochUtc(task.date) : null,
+    };
+  }
+
+  private getEpochUtc(date: Date): number {
+    const utc = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+    return utc.getTime();
+  }
+
+  private getLocalDate(utcEpoch: number): Date {
+    return new Date(utcEpoch - new Date().getTimezoneOffset() * 60000);
   }
 }

@@ -15,6 +15,17 @@
   display: block;
 }
 
+.done-container {
+  max-height: 900px;
+  overflow: hidden;
+  transition: max-height 200ms ease-in-out;
+}
+
+.done-container.hidden {
+  max-height: 0;
+  transition: max-height 200ms ease-in-out;
+}
+
 .task-list,
 .task-container,
 .todo-item {
@@ -32,7 +43,6 @@
   overflow: hidden;
   font-size: 14px;
   flex-grow: 1;
-  cursor: pointer;
 
   .todo-text {
     text-align: left;

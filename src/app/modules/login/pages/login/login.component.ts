@@ -40,11 +40,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // private loginError(message: string): void {
-  //   console.log(message);
-  //   this.snackBar.open(message);
-  // }
-
   public formHasError(controlName: string, error?: string): boolean {
     const control = this.loginForm.controls[controlName];
     return (

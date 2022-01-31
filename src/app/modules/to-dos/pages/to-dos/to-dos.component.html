@@ -4,70 +4,58 @@
             <span class="list-title">To do</span>
         </div>
 
-        <mat-card cdkDropList id="todoList" [cdkDropListData]="todoNew" class="tasks-list"
+        <mat-card cdkDropList id="todoList" [cdkDropListData]="todo" class="tasks-list"
             [@.disabled]="disableListAnimation" (cdkDropListDropped)="drop($event)"
             [cdkDropListConnectedTo]="['doneList']">
-            <div *ngIf="todoNew.length === 0">Nothing to do here</div>
-            <div @fadeAnimation *ngFor="let item of todoNew; index as i" cdkDrag class="todo-item"
+            <div *ngIf="todo.length === 0 && !isLoading" @fadeAnimation>Nothing to do here</div>
+            <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center" class="my-2">
+                <mat-spinner strokeWidth="3" diameter="50"></mat-spinner>
+            </div>
+            <div @fadeAnimation *ngFor="let item of todo; index as i" cdkDrag class="todo-item"
                 (cdkDragStarted)="onDragBegin()" (cdkDragEnded)="onDragEnd()">
                 <ng-container [ngTemplateOutlet]="todoItem" [ngTemplateOutletContext]="{item:item, done:false}">
                 </ng-container>
                 <mat-icon cdkDragHandle style="cursor: move;">drag_handle</mat-icon>
             </div>
-            <!-- <div @fadeAnimation *ngFor="let item of todoNew" cdkDrag
-                style="cursor: default; overflow: hidden; border-bottom: solid 1px #444444;">
-                <div class="task-wrapper" @fadeAnimation cdkDrag style="cursor: default;">
-                    <mat-checkbox [checked]="false" (change)="checkboxClick(item,false)"></mat-checkbox>
-                    <span style="text-align: left; width: 100%; margin-left: 1rem;">{{item.text}}</span>
-                    <mat-icon cdkDragHandle style="cursor: move;">drag_handle</mat-icon>
-                </div>
-            </div> -->
         </mat-card>
-        <button mat-raised-button color="primary" class="w-100 mt-2" fxHide fxShow.gt-sm>add new</button>
-        <!-- <mat-card class=" mt-2">
-            
-            <button mat-button class="w-100">add new</button>
-        </mat-card> -->
+        <button mat-raised-button color="primary" class="w-100 mt-2" fxHide fxShow.gt-sm [disabled]="isLoading">add
+            new</button>
     </div>
 
     <div class="tasks-container">
         <div fxLayout="row" fxLayoutAlign="space-between center" class="list-title" style="cursor: pointer;"
             (click)="showDone = ! showDone">
-            <span class="">Done ({{doneNew.length}})</span>
+            <span class="">Done ({{done.length}})</span>
             <mat-icon class="chevron-icon" style="rotate: 90deg;" [class.collapsed]="!showDone">expand_more</mat-icon>
         </div>
 
-
-        <mat-card *ngIf="showDone" cdkDropList id="doneList" [cdkDropListData]="doneNew" class="tasks-list"
-            [@.disabled]="disableListAnimation" (cdkDropListDropped)="drop($event)"
-            [cdkDropListConnectedTo]="['todoList']">
-            <div @fadeAnimation *ngFor="let item of doneNew" cdkDrag class="todo-item" (cdkDragStarted)="onDragBegin()"
-                (cdkDragEnded)="onDragEnd()">
-                <ng-container [ngTemplateOutlet]="todoItem" [ngTemplateOutletContext]="{item:item, done:true}">
-                </ng-container>
-                <mat-icon cdkDragHandle style="cursor: move;">drag_handle</mat-icon>
-            </div>
-            <!-- <div @fadeAnimation *ngFor="let item of doneNew" cdkDrag
-                style="cursor: default; overflow: hidden; border-bottom: solid 1px #444444;">
-                <div class="task-wrapper">
-                    <mat-checkbox [checked]="true" (change)="checkboxClick(item,true)"></mat-checkbox>
-                    <span
-                        style="text-align: left; width: 100%; text-decoration: line-through; margin-left: 1rem;">{{item.text}}</span>
-                    <span class="date-pill">6 hours ago</span>
+        <div class="done-container" [class.hidden]="!showDone">
+            <mat-card cdkDropList id="doneList" [cdkDropListData]="done" class="tasks-list"
+                [@.disabled]="disableListAnimation" (cdkDropListDropped)="drop($event)"
+                [cdkDropListConnectedTo]="['todoList']">
+                <div @fadeAnimation *ngFor="let item of done" cdkDrag class="todo-item" (cdkDragStarted)="onDragBegin()"
+                    (cdkDragEnded)="onDragEnd()">
+                    <ng-container [ngTemplateOutlet]="todoItem" [ngTemplateOutletContext]="{item:item, done:true}">
+                    </ng-container>
                     <mat-icon cdkDragHandle style="cursor: move;">drag_handle</mat-icon>
                 </div>
-            </div> -->
-        </mat-card>
+            </mat-card>
+        </div>
     </div>
+</div>
+
+<div style="position: fixed; bottom: 1.2rem; right: 1.2rem;" fxShow fxHide.gt-sm>
+    <button mat-fab color="primary" aria-label="Example icon button with a delete icon" [disabled]="isLoading"
+        (click)="openDialog()"
+        style="width: 65px; height: 65px; border-radius: 13px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
+        <mat-icon>add</mat-icon>
+    </button>
 </div>
 
 <ng-template #todoItem let-item='item' let-done='done'>
     <div class="task-wrapper" [class.done]="done">
-        <mat-checkbox [checked]="done" (change)="checkboxClick(item,done)"></mat-checkbox>
-        <!-- <span class="todo-text">{{item.text}}</span>
-        <span class="date-pill" *ngIf="item.date">{{getRelativeTime(item.date)}}</span> -->
-
-        <div style="width: 100%;">
+        <mat-checkbox [checked]="done" (change)="checkboxClick(item,!done)"></mat-checkbox>
+        <div style="width: 100%; cursor: pointer;" (click)="openDialog(item)">
             <span class="todo-text">{{item.text}}</span>
             <div class="app-pill" style="margin-top: .5rem; width: fit-content; margin-left: .8rem;" *ngIf="item.date">
                 {{item.date | timeStamp }}
@@ -75,10 +63,3 @@
         </div>
     </div>
 </ng-template>
-
-<div style="position: fixed; bottom: 1.2rem; right: 1.2rem;" fxShow fxHide.gt-sm>
-    <button mat-fab color="primary" aria-label="Example icon button with a delete icon" (click)="openDialog()"
-        style="width: 65px; height: 65px; border-radius: 13px; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);">
-        <mat-icon>add</mat-icon>
-    </button>
-</div>

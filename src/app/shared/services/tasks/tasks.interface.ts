@@ -2,11 +2,11 @@ export interface ITask {
   id: string;
   order: number;
   text: string;
-  date?: number;
+  date?: Date;
 }
 
 export interface IDbTask {
   order: number;
   text: string;
-  date?: number;
+  date: number | null;
 }
