@@ -26,6 +26,7 @@ import {
 } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
 import { combineLatest } from 'rxjs';
 import { isMobileDevice } from '@shared/helpers/others/is-mobile-device';
+import { Title } from '@angular/platform-browser';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':enter', [
@@ -52,7 +53,7 @@ export class ToDosComponent implements OnInit {
   public disableListAnimation = false;
   public isLoading = false;
 
-  constructor(private tasksService: TasksService, private dialog: MatDialog) {}
+  constructor(private tasksService: TasksService, private dialog: MatDialog, private titleService: Title) {}
 
   public openDialog(task?: ITask): void {
     const dialogRef = this.dialog.open(ToDoDialogComponent, {
@@ -118,6 +119,10 @@ export class ToDosComponent implements OnInit {
     return !!this.done.find((t) => t.id === taskId);
   }
 
+  private updateTitle() : void {
+    this.titleService.setTitle(`To Do (${this.todo.length})`);
+  }
+
   private fetchData(): void {
     const toDo = this.tasksService.getTodo();
     const done = this.tasksService.getDone();
@@ -127,6 +132,7 @@ export class ToDosComponent implements OnInit {
       this.todo = toDoTasks;
       this.done = doneTasks;
       this.isLoading = false;
+      this.updateTitle();
     });
   }
 

@@ -29,13 +29,13 @@ export class AuthService {
     return localStorage.getItem(this.uidStorageKey);
   }
 
-  public login(email: string, password: string): Observable<boolean> {
-    return new Observable<boolean>((observable) => {
+  public login(email: string, password: string): Observable<void> {
+    return new Observable<void>((observable) => {
       signInWithEmailAndPassword(this.auth, email, password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          observable.next(true);
+          observable.next();
           observable.complete();
           console.log(user);
           // TODO: store data
@@ -49,18 +49,20 @@ export class AuthService {
   }
 
   public register(email: string, password: string): void {
+    // TODO: transform in observable
     createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         console.log(user);
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // ..
       });
+  }
+
+  public isLoggedIn() : boolean {
+    return !!localStorage.getItem(this.uidStorageKey);
   }
 
   public getFirebaseAuth(): Auth {

@@ -1,8 +1,6 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
+@use "sass:map";
+@use "@angular/material" as mat;
 @use "./app-theme" as theme;
-
-
 
 .app-light-theme {
   @include mat.all-component-colors(theme.$light-theme);
@@ -12,7 +10,8 @@
 }
 
 .app-light-theme {
-  a, a:hover {
+  a,
+  a:hover {
     color: theme.mat-color(theme.$light-primary, default);
   }
 
@@ -27,5 +26,9 @@
 
   .app-pill {
     background-color: theme.mat-color(theme.$grey-palette, 200);
+  }
+
+  .login-wrapper {
+    background-image: url("../../img/backgrounds/blob-scene-haikei-light.svg");
   }
 }

@@ -1,4 +1,5 @@
-<div fxLayout="column" fxLayoutAlign="center start" style="margin: 1rem;" fxLayout.gt-md="row">
+<div fxLayout="column" fxLayoutAlign="start center" style="margin: 1rem;" fxLayout.gt-md="row"
+    fxLayoutAlign.gt-md="center start" fxLayoutGap="1rem">
     <div class="tasks-container">
         <div class="list-title">
             <span class="list-title">To do</span>
@@ -32,14 +33,14 @@
         </div>
 
         <div class="done-container" [class.hidden]="!showDone">
-            <mat-card cdkDropList id="doneList" [cdkDropListData]="done" class="tasks-list"
+            <mat-card cdkDropList id="doneList" [cdkDropListData]="done" class="tasks-list mb-4"
                 [@.disabled]="disableListAnimation" (cdkDropListDropped)="drop($event)"
                 [cdkDropListConnectedTo]="['todoList']">
                 <div @fadeAnimation *ngFor="let item of done" cdkDrag class="todo-item" (cdkDragStarted)="onDragBegin()"
                     (cdkDragEnded)="onDragEnd()">
                     <ng-container [ngTemplateOutlet]="todoItem" [ngTemplateOutletContext]="{item:item, done:true}">
                     </ng-container>
-                    <mat-icon cdkDragHandle style="cursor: move;">drag_handle</mat-icon>
+                    <mat-icon cdkDragHandle class="drag-handle">drag_handle</mat-icon>
                 </div>
             </mat-card>
         </div>
@@ -59,7 +60,7 @@
         <mat-checkbox [checked]="done" (change)="checkboxClick(item,!done)"></mat-checkbox>
         <div style="width: 100%; cursor: pointer;" (click)="openDialog(item)">
             <p class="todo-text">{{item.text}}</p>
-            <div class="app-pill" style="margin-top: .5rem; width: fit-content; margin-left: .8rem;" *ngIf="item.date">
+            <div class="app-pill" *ngIf="item.date">
                 {{item.date | timeStamp }}
             </div>
         </div>
