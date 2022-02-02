@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   Auth,
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
+  signOut,
 } from 'firebase/auth';
-import { Observable, throwError } from 'rxjs';
-import { FirebaseService } from '../services/firebase/firebase.service';
+import { observable, Observable, throwError } from 'rxjs';
+import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +17,7 @@ export class AuthService {
   private auth = getAuth();
   private uidStorageKey = 'firebase_user_uid';
 
-  constructor(private firebase: FirebaseService) {
+  constructor(private firebase: FirebaseService, private route: Router) {
     this.auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         localStorage.setItem(this.uidStorageKey, authUser.uid);
@@ -45,6 +47,18 @@ export class AuthService {
           const errorMessage = error.message;
           observable.error({ errorMessage, errorCode });
         });
+    });
+  }
+
+  public logout() : Observable<void> {
+    return new Observable<void>((observable) => {
+      signOut(this.auth).then(() => {
+        observable.next();
+        observable.complete();
+        this.route.navigate(['/login']);
+      }).catch((error) => {
+        observable.error(error);
+      });
     });
   }
 

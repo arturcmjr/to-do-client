@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { RelativeTimeStampPipe } from './pipes/relative-time-stamp/relative-time-stamp.pipe';
 import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
+import { MoreDialogComponent } from './components/more-dialog/more-dialog.component';
 
 
 
@@ -17,6 +18,7 @@ import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
     LayoutComponent,
     RelativeTimeStampPipe,
     TimeStampPipe,
+    MoreDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -35,6 +37,7 @@ import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
     RouterModule,
     RelativeTimeStampPipe,
     TimeStampPipe,
+    MoreDialogComponent,
   ],
 })
 export class SharedModule { }

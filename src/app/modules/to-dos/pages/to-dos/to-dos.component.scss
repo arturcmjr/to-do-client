@@ -57,7 +57,7 @@
   color: #c4c4c4;
   display: flex;
   flex-direction: row;
-  align-items: start;
+  align-items: flex-start;
   justify-content: space-between;
   box-sizing: border-box;
   overflow: hidden;
@@ -121,7 +121,7 @@
   border-bottom: solid 1px theme.mat-color(theme.$grey-palette, 600);
   padding: 0 0.5rem;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: center;
 
   .drag-handle {

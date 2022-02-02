@@ -39,6 +39,10 @@ mat-toolbar {
   background-color: lighten(theme.mat-color(theme.$custom-dark-primary), 10%) !important;
 }
 
+button.alpha-10 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .app-pill {
   border-radius: 20px;
   background-color: theme.mat-color(theme.$custom-dark-primary, 400);

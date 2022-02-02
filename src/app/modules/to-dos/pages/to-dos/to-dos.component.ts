@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  IterableDiffers,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -16,7 +21,7 @@ import {
 import { DateTime } from 'luxon';
 import { FirebaseService } from '@shared/services/firebase/firebase.service';
 import { ref, set } from 'firebase/database';
-import { AuthService } from '@shared/auth/auth.service';
+import { AuthService } from '@shared/services/auth/auth.service';
 import { TasksService } from '@shared/services/tasks/tasks.service';
 import { ITask } from '@shared/services/tasks/tasks.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -52,8 +57,25 @@ export class ToDosComponent implements OnInit {
   public showDone = false;
   public disableListAnimation = false;
   public isLoading = false;
+  private differ: any;
 
-  constructor(private tasksService: TasksService, private dialog: MatDialog, private titleService: Title) {}
+  constructor(
+    private tasksService: TasksService,
+    private dialog: MatDialog,
+    private titleService: Title,
+    private differs: IterableDiffers
+  ) {
+    this.differ = differs.find([]).create();
+  }
+
+  public ngOnInit(): void {
+    this.fetchData();
+  }
+
+  public ngDoCheck() : void {
+    const change = this.differ.diff(this.todo);
+    if(change) this.updateTitle();
+  }
 
   public openDialog(task?: ITask): void {
     const dialogRef = this.dialog.open(ToDoDialogComponent, {
@@ -119,7 +141,7 @@ export class ToDosComponent implements OnInit {
     return !!this.done.find((t) => t.id === taskId);
   }
 
-  private updateTitle() : void {
+  private updateTitle(): void {
     this.titleService.setTitle(`To Do (${this.todo.length})`);
   }
 
@@ -164,10 +186,6 @@ export class ToDosComponent implements OnInit {
       // this.tasksService.setTasks(this.todoNew, false);
       // this.tasksService.setTasks(this.doneNew, true);
     }
-  }
-
-  public ngOnInit(): void {
-    this.fetchData();
   }
 
   public onDragBegin(): void {

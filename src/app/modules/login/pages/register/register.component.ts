@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AuthService } from '@shared/auth/auth.service';
+import { AuthService } from '@shared/services/auth/auth.service';
 import { passwordMatch } from '@shared/helpers/validators/password-match';
 
 @Component({

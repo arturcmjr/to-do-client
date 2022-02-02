@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from 'src/app/shared/auth/auth.service';
+import { AuthService } from '@shared/services/auth/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LoginComponent implements OnInit {
   public loginForm = new FormGroup({
@@ -31,7 +32,7 @@ export class LoginComponent implements OnInit {
     this.auth.login(email, password).subscribe({
       next: (value) => {
         console.log(value);
-        this.router.navigate(["/todo"]);
+        this.router.navigate(["/tasks"]);
       },
       error: (message) => {
         // snackBar.open(message.errorCode, undefined, { duration: 3000, panelClass: ['mat-toolbar', 'mat-warn'] });
