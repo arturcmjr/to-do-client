@@ -28,7 +28,7 @@
     <div class="tasks-container">
         <div fxLayout="row" fxLayoutAlign="space-between center" class="list-title" style="cursor: pointer;"
             (click)="showDone = ! showDone">
-            <span class="">Done ({{done.length}})</span>
+            <span>Done ({{done.length}})</span>
             <mat-icon class="chevron-icon" style="rotate: 90deg;" [class.collapsed]="!showDone">expand_more</mat-icon>
         </div>
 
@@ -57,7 +57,7 @@
 
 <ng-template #todoItem let-item='item' let-done='done'>
     <div class="task-wrapper" [class.done]="done">
-        <mat-checkbox [checked]="done" (change)="checkboxClick(item,!done)"></mat-checkbox>
+        <mat-checkbox [checked]="done" (change)="markTaskAs(item,!done)"></mat-checkbox>
         <div style="width: 100%; cursor: pointer;" (click)="openDialog(item)">
             <p class="todo-text">{{item.text}}</p>
             <div class="app-pill" *ngIf="item.date">

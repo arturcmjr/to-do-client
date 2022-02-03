@@ -9,19 +9,8 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import {
-  animate,
-  keyframes,
-  query,
-  stagger,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { DateTime } from 'luxon';
-import { FirebaseService } from '@shared/services/firebase/firebase.service';
-import { ref, set } from 'firebase/database';
-import { AuthService } from '@shared/services/auth/auth.service';
 import { TasksService } from '@shared/services/tasks/tasks.service';
 import { ITask } from '@shared/services/tasks/tasks.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +19,6 @@ import {
   ToDoDialogComponent,
 } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
 import { combineLatest } from 'rxjs';
-import { isMobileDevice } from '@shared/helpers/others/is-mobile-device';
 import { Title } from '@angular/platform-browser';
 
 export const fadeAnimation = trigger('fadeAnimation', [
@@ -65,16 +53,16 @@ export class ToDosComponent implements OnInit {
     private titleService: Title,
     private differs: IterableDiffers
   ) {
-    this.differ = differs.find([]).create();
+    this.differ = differs.find(this.todo).create();
   }
 
   public ngOnInit(): void {
     this.fetchData();
   }
 
-  public ngDoCheck() : void {
+  public ngDoCheck(): void {
     const change = this.differ.diff(this.todo);
-    if(change) this.updateTitle();
+    if (change) this.updateTitle();
   }
 
   public openDialog(task?: ITask): void {
@@ -133,6 +121,7 @@ export class ToDosComponent implements OnInit {
       if (found) {
         const index = tasks.indexOf(found);
         tasks.splice(index, 1);
+        this.saveOrder(done);
       }
     });
   }
@@ -165,26 +154,18 @@ export class ToDosComponent implements OnInit {
 
   public drop(event: CdkDragDrop<ITask[]>): void {
     console.log(event.container.id);
+    const taskWasDone = event.previousContainer.id === 'doneList';
+    const tasks = taskWasDone ? this.done : this.todo;
+    const item = tasks[event.previousIndex];
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-      this.saveOrder(true);
-      this.saveOrder(false);
-      // this.tasksService.setTasks(this.todoNew, false);
-      // this.tasksService.setTasks(this.doneNew, true);
+      this.saveOrder(taskWasDone);
     } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex
-      );
-      console.log(this.done);
-      // this.tasksService.setTasks(this.todoNew, false);
-      // this.tasksService.setTasks(this.doneNew, true);
+      this.markTaskAs(item, !taskWasDone, event.currentIndex);
     }
   }
 
@@ -198,15 +179,17 @@ export class ToDosComponent implements OnInit {
     });
   }
 
-  public checkboxClick(item: ITask, done: boolean): void {
+  public markTaskAs(item: ITask, done: boolean, order: number = 0): void {
     console.log(item);
     this.tasksService.markTaskAs(item, done).subscribe();
     window.setTimeout(() => {
       if (!done) {
-        transferArrayItem(this.done, this.todo, this.done.indexOf(item), 0);
+        transferArrayItem(this.done, this.todo, this.done.indexOf(item), order);
       } else {
-        transferArrayItem(this.todo, this.done, this.todo.indexOf(item), 0);
+        transferArrayItem(this.todo, this.done, this.todo.indexOf(item), order);
       }
+      this.saveOrder(true);
+      this.saveOrder(false);
     }, 0);
   }
 
