@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 
 import { LayoutComponent } from './layout.component';
@@ -9,9 +10,9 @@ describe('LayoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LayoutComponent ]
-    })
-    .compileComponents();
+      imports: [MatDialogModule],
+      declarations: [LayoutComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
