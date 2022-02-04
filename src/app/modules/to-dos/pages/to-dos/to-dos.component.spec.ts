@@ -1,9 +1,35 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
+import { IterableDiffers } from '@angular/core';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { By, Title } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToDoDialogComponent } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
+import { AuthService } from '@shared/services/auth/auth.service';
+import { FirebaseService } from '@shared/services/firebase/firebase.service';
+import { ITask } from '@shared/services/tasks/tasks.interface';
+import { TasksService } from '@shared/services/tasks/tasks.service';
+import { Observable, of } from 'rxjs';
 
 import { ToDosComponent } from './to-dos.component';
+
+class MockTasksService extends TasksService {
+
+  protected override getTasks(done: boolean): Observable<ITask[]> {
+    return new Observable<ITask[]>((observable) => {
+      observable.next([
+        {text: 'bom dia', id: 'test', order: 0},
+      ]);
+      observable.complete();
+    });
+  }
+}
 
 describe('ToDosComponent', () => {
   let component: ToDosComponent;
@@ -13,6 +39,7 @@ describe('ToDosComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, MatDialogModule, RouterTestingModule],
       declarations: [ToDosComponent],
+      providers: [{ provide: TasksService, useClass: MockTasksService },]
     }).compileComponents();
   });
 
@@ -27,41 +54,38 @@ describe('ToDosComponent', () => {
   });
 
   it('should open dialog', () => {
-    fixture.componentInstance.openDialog();
-    window.setTimeout(() => {
-      fixture.detectChanges();
-      const popUpHeader = document.getElementsByTagName(
-        'h2'
-      )[0] as HTMLHeadElement;
-      expect(popUpHeader.innerText).toContain('Task');
-    });
+    component.openDialog();
+    fixture.detectChanges();
+    const popUpHeader = document.getElementsByTagName(
+      'mat-dialog-container'
+    )[0] as HTMLHeadElement;
+    expect(popUpHeader).toBeTruthy();
   });
 
-  it('should have tasks to do', () => {
+  it('should have to do tasks', () => {
+    fixture.detectChanges();
+    expect(component.todo.length).toBeGreaterThan(0);
+  });
+
+  it('should show to do tasks', () => {
     const taskText = 'sample task to be done';
-    fixture.componentInstance.todo = [
-      { text: taskText, id: '0', order: 0 },
-    ];
+    component.todo = [{ text: taskText, id: '0', order: 0 }];
     fixture.detectChanges();
     const todo = document.getElementById('todoList') as HTMLHeadElement;
     expect(todo.innerHTML).toContain(taskText);
   });
 
-  it('should have tasks done', () => {
-    const taskText = 'sample task that it\'s done';
-    fixture.componentInstance.todo = [
-      { text: taskText, id: '0', order: 0 },
-    ];
-    fixture.componentInstance.showDone = true;
-    window.setTimeout(() => {
-      fixture.detectChanges();
-      const done = document.getElementById('doneList') as HTMLHeadElement;
-      expect(done.innerHTML).toContain(taskText);
-    });
+  it('should show done tasks', () => {
+    const taskText = "sample task that it's done";
+    component.todo = [{ text: taskText, id: '0', order: 0 }];
+    component.showDone = true;
+    fixture.detectChanges();
+    const done = fixture.nativeElement as HTMLElement;
+    expect(done.innerHTML).toContain(taskText);
   });
 
-  it('should show tasks to be done on title', () => {
-    fixture.componentInstance.todo = [
+  it('should show to do count on title', () => {
+    component.todo = [
       { text: 'null', id: '0', order: 0 },
       { text: 'null', id: '1', order: 1 },
     ];

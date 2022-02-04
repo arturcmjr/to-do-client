@@ -29,4 +29,12 @@ describe('ToDoDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have task on title', () => {
+    expect(document.querySelector('h2')?.innerHTML).toContain('Task');
+  });
+
+  // it('should not call modalService.open on uploadFile when filePath is empty', () => {
+    
+  // });
 });

@@ -72,7 +72,7 @@ export class TasksService {
     return this.getTasks(true);
   }
 
-  private getTasks(done: boolean): Observable<ITask[]> {
+  protected getTasks(done: boolean): Observable<ITask[]> {
     return new Observable<ITask[]>((observable) => {
       const tasksRef = ref(this.database, this.getDbTasksPath(done));
       onValue(
