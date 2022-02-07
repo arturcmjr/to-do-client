@@ -10,6 +10,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RelativeTimeStampPipe } from './pipes/relative-time-stamp/relative-time-stamp.pipe';
 import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
 import { MoreDialogComponent } from './components/more-dialog/more-dialog.component';
+import { SpinnerButtonDirective } from './directives/spinner-button.directive';
 
 
 
@@ -19,6 +20,7 @@ import { MoreDialogComponent } from './components/more-dialog/more-dialog.compon
     RelativeTimeStampPipe,
     TimeStampPipe,
     MoreDialogComponent,
+    SpinnerButtonDirective,
   ],
   imports: [
     CommonModule,
@@ -38,6 +40,7 @@ import { MoreDialogComponent } from './components/more-dialog/more-dialog.compon
     RelativeTimeStampPipe,
     TimeStampPipe,
     MoreDialogComponent,
+    SpinnerButtonDirective,
   ],
 })
 export class SharedModule { }

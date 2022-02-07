@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '@shared/services/auth/auth.service';
 import { passwordMatch } from '@shared/helpers/validators/password-match';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -17,8 +18,9 @@ export class RegisterComponent implements OnInit {
       passwordMatch,
     ]),
   });
+  public isLoading = false;
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     const { confirmPassword, password } = this.registerForm.controls;
@@ -40,7 +42,14 @@ export class RegisterComponent implements OnInit {
       this.registerForm.markAllAsTouched();
       return;
     }
+    this.isLoading = true;
     const { email, password } = this.registerForm.value;
-    this.auth.register(email,password);
+    this.auth.register(email,password).subscribe({next: () => {
+      this.router.navigate(['/tasks']);
+      this.isLoading = false;
+    },error: (error: any) => {
+      this.isLoading = false;
+      // TODO: show error
+    }});
   }
 }

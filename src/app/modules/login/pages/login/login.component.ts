@@ -16,27 +16,34 @@ export class LoginComponent implements OnInit {
     password: new FormControl(null, [Validators.required]),
   });
   public loginError: string | null = null;
+  public isLoading = false;
 
   constructor(private auth: AuthService, private router: Router) {}
 
-  ngOnInit(): void { 
-   }
+  ngOnInit(): void {
+    // window.setInterval(() => {
+    //   this.isLoading = !this.isLoading;
+    //   this.count++;
+    // },4000);
+  }
 
   public submit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
+    this.isLoading = true;
     const { email, password } = this.loginForm.value;
-    const me = this;
     this.auth.login(email, password).subscribe({
       next: (value) => {
         console.log(value);
-        this.router.navigate(["/tasks"]);
+        this.isLoading = false;
+        this.router.navigate(['/tasks']);
       },
       error: (message) => {
         // snackBar.open(message.errorCode, undefined, { duration: 3000, panelClass: ['mat-toolbar', 'mat-warn'] });
-        me.loginError = message.errorCode;
+        this.loginError = message.errorCode;
+        this.isLoading = false;
       },
     });
   }

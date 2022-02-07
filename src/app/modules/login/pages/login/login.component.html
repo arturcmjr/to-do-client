@@ -19,11 +19,19 @@
         <mat-error *ngIf="formHasError('password','required')">password is required</mat-error>
       </mat-form-field>
 
-      <a style="text-align: right;" routerLink="/register">forgot password</a>
+      <div class="mb-2">
+        <a routerLink="/recover-password">forgot password</a>
+      </div>
 
       <mat-error *ngIf="loginError">{{loginError}}</mat-error>
 
-      <button mat-flat-button color="primary" class="mt-3" type="submit">Login</button>
+      <button app-spinner-button mat-flat-button color="primary" class="mt-3" [isLoading]="isLoading" type="submit">
+        Login
+      </button>
     </form>
   </mat-card>
+
+  <div class="bottom-link">
+    Do not have an account? <a routerLink="/register">sign up</a>
+  </div>
 </div>

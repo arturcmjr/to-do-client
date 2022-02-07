@@ -24,3 +24,16 @@ mat-form-field {
     color: #555555;
   }
 }
+
+.bottom-link {
+  position: absolute;
+  bottom: 1.8rem;
+  font-size: 1.2rem;
+  color: black;
+  font-weight: 200;
+
+  a, a:hover {
+    color: black;
+    font-weight: 500;
+  }
+}

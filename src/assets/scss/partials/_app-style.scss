@@ -1,8 +1,6 @@
-@use 'sass:map';
-@use '@angular/material' as mat;
+@use "sass:map";
+@use "@angular/material" as mat;
 @use "./app-theme" as theme;
-
-
 
 @include mat.all-component-themes(theme.$dark-theme);
 @include mat.toolbar-theme(theme.$custom-dark-theme);
@@ -10,10 +8,11 @@
 
 body {
   color: #fff !important;
-  background-color : theme.mat-color(theme.$custom-dark-primary, 900) !important;
+  background-color: theme.mat-color(theme.$custom-dark-primary, 900) !important;
 }
 
-a, a:hover {
+a,
+a:hover {
   color: theme.mat-color(theme.$dark-primary, 200);
   text-decoration: none;
   transition: transform 100ms linear;
@@ -36,7 +35,10 @@ mat-card {
 }
 
 mat-toolbar {
-  background-color: lighten(theme.mat-color(theme.$custom-dark-primary), 10%) !important;
+  background-color: lighten(
+    theme.mat-color(theme.$custom-dark-primary),
+    10%
+  ) !important;
 }
 
 button.alpha-10 {
@@ -53,7 +55,63 @@ button.alpha-10 {
 
 .login-wrapper {
   background-image: url("../../img/backgrounds/blob-scene-haikei-dark.svg");
-  background-position: center; 
-  background-repeat: no-repeat; 
-  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+button.spinner-show,
+button.spinner-hide {
+  .mat-progress-spinner circle,
+  .mat-spinner circle {
+    stroke: black !important;
+  }
+
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    border-radius: 3px;
+    transition: all 200ms ease-in-out;
+  }
+}
+
+button.spinner-show {
+  pointer-events: none;
+
+  mat-spinner {
+    margin: auto 0.5rem !important;
+    max-width: 25px;
+    transition: all 200ms ease-in-out;
+  }
+
+  .spinner-overlay {
+    background-color: rgba(255, 255, 255, 0.2);
+    visibility: visible;
+    cursor: default;
+    transition: all 200ms ease-in-out;
+  }
+}
+
+button.spinner-hide {
+  pointer-events: all;
+
+  mat-spinner {
+    max-width: 0;
+    margin: 0 !important;
+    transition: all 200ms ease-in-out;
+  }
+
+  .spinner-overlay {
+    background-color: transparent;
+    visibility: hidden;
+    transition: all 200ms ease-in-out;
+  }
 }

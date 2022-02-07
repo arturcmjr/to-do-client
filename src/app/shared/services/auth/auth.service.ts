@@ -4,6 +4,7 @@ import {
   Auth,
   createUserWithEmailAndPassword,
   getAuth,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
@@ -14,10 +15,13 @@ import { FirebaseService } from '../firebase/firebase.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private auth = getAuth();
+  private auth: Auth;
   private uidStorageKey = 'firebase_user_uid';
 
   constructor(private firebase: FirebaseService, private route: Router) {
+    this.auth = getAuth();
+    this.auth.languageCode = 'en';
+
     this.auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         localStorage.setItem(this.uidStorageKey, authUser.uid);
@@ -27,7 +31,7 @@ export class AuthService {
     });
   }
 
-  public getUserUid() : string | null {
+  public getUserUid(): string | null {
     return localStorage.getItem(this.uidStorageKey);
   }
 
@@ -50,36 +54,57 @@ export class AuthService {
     });
   }
 
-  public logout() : Observable<void> {
+  public logout(): Observable<void> {
     return new Observable<void>((observable) => {
-      signOut(this.auth).then(() => {
-        observable.next();
-        observable.complete();
-        this.route.navigate(['/login']);
-      }).catch((error) => {
-        observable.error(error);
-      });
+      signOut(this.auth)
+        .then(() => {
+          observable.next();
+          observable.complete();
+          this.route.navigate(['/login']);
+        })
+        .catch((error) => {
+          observable.error(error);
+        });
     });
   }
 
-  public register(email: string, password: string): void {
-    // TODO: transform in observable
-    createUserWithEmailAndPassword(this.auth, email, password)
+  public register(email: string, password: string): Observable<void> {
+    return new Observable<void>((observable) => {
+      createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        observable.next();
+        observable.complete();
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        observable.error({errorCode, errorMessage});
       });
+    });
   }
 
-  public isLoggedIn() : boolean {
+  public isLoggedIn(): boolean {
     return !!localStorage.getItem(this.uidStorageKey);
   }
 
   public getFirebaseAuth(): Auth {
     return this.auth;
+  }
+
+  public sendRecoverEmail(email: string): Observable<void> {
+    return new Observable<void>((observable) => {
+      sendPasswordResetEmail(this.auth, email)
+        .then(() => {
+          observable.next();
+          observable.complete();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          observable.error({ errorMessage, errorCode });
+        });
+    });
   }
 }
