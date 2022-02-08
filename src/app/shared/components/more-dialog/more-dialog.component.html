@@ -1,15 +1,9 @@
-<!-- <div mat-dzialog-title class="d-flex justify-content-between">
-  <h2>{{title}}</h2>
-  <button mat-icon-button aria-label="Delete icon" *ngIf="data.id" (click)="onDeleteClick()">
-    <mat-icon>delete_outline</mat-icon>
-  </button>
-</div> -->
-
 <div mat-dialog-content>
-  <button mat-flat-button class="w-100 mb-2 alpha-10" (click)="logout()">logout</button>
-  <button mat-flat-button class="w-100 mb-1 alpha-10" (click)="toggleTheme()">{{isDarkTheme()? 'light' : 'dark'}} theme</button>
+  <button mat-flat-button class="w-100 mb-2" (click)="logout()">logout</button>
+  <button mat-flat-button class="w-100 mb-1" (click)="changeTheme()">change theme</button>
+  <hr>
+  <p style="font-size: .8rem;">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+    aliqua. Ut enim ad minim <b>veniam</b>.
+  </p>
 </div>
-<!-- <div mat-dialog-actions class="w-100 d-flex justify-content-end">
-  <button mat-button (click)="onCancelClick()">Cancel</button>
-  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Save</button>
-</div> -->

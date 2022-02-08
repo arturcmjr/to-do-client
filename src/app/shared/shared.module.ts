@@ -11,6 +11,7 @@ import { RelativeTimeStampPipe } from './pipes/relative-time-stamp/relative-time
 import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
 import { MoreDialogComponent } from './components/more-dialog/more-dialog.component';
 import { SpinnerButtonDirective } from './directives/spinner-button.directive';
+import { ThemeSheetComponent } from './components/theme-sheet/theme-sheet.component';
 
 
 
@@ -21,6 +22,7 @@ import { SpinnerButtonDirective } from './directives/spinner-button.directive';
     TimeStampPipe,
     MoreDialogComponent,
     SpinnerButtonDirective,
+    ThemeSheetComponent,
   ],
   imports: [
     CommonModule,

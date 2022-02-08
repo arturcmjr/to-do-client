@@ -1,0 +1,16 @@
+<mat-nav-list>
+  <a href="" mat-list-item (click)="$event.preventDefault(); changeTheme('light')">
+    <span mat-line>Light</span>
+    <span mat-line>Light theme</span>
+  </a>
+
+  <a href="" mat-list-item (click)="$event.preventDefault(); changeTheme('dark')">
+    <span mat-line>Dark</span>
+    <span mat-line>Dark theme</span>
+  </a>
+
+  <a href="" mat-list-item (click)="$event.preventDefault(); changeTheme('system')">
+    <span mat-line>System</span>
+    <span mat-line>Match browser's theme</span>
+  </a>
+</mat-nav-list>
