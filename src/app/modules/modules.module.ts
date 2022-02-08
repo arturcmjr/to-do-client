@@ -5,6 +5,7 @@ import { LoginComponent } from './login/pages/login/login.component';
 import { RegisterComponent } from './login/pages/register/register.component';
 import { ToDoDialogComponent } from './to-dos/components/to-do-dialog/to-do-dialog.component';
 import { RecoverPasswordComponent } from './login/pages/recover-password/recover-password.component';
+import { ConfirmPasswordRecoveryComponent } from './login/pages/confirm-password-recovery/confirm-password-recovery.component';
 
 
 
@@ -14,7 +15,8 @@ import { RecoverPasswordComponent } from './login/pages/recover-password/recover
     LoginComponent,
     RegisterComponent,
     ToDoDialogComponent,
-    RecoverPasswordComponent
+    RecoverPasswordComponent,
+    ConfirmPasswordRecoveryComponent
   ],
   imports: [
     SharedModule,

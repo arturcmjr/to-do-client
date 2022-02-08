@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   Auth,
+  confirmPasswordReset,
   createUserWithEmailAndPassword,
   getAuth,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  verifyPasswordResetCode,
 } from 'firebase/auth';
 import { observable, Observable, throwError } from 'rxjs';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -71,17 +73,17 @@ export class AuthService {
   public register(email: string, password: string): Observable<void> {
     return new Observable<void>((observable) => {
       createUserWithEmailAndPassword(this.auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        observable.next();
-        observable.complete();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        observable.error({errorCode, errorMessage});
-      });
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          observable.next();
+          observable.complete();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          observable.error({ errorCode, errorMessage });
+        });
     });
   }
 
@@ -96,6 +98,39 @@ export class AuthService {
   public sendRecoverEmail(email: string): Observable<void> {
     return new Observable<void>((observable) => {
       sendPasswordResetEmail(this.auth, email)
+        .then(() => {
+          observable.next();
+          observable.complete();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          observable.error({ errorMessage, errorCode });
+        });
+    });
+  }
+
+  public verifyPasswordResetCode(code: string): Observable<string> {
+    return new Observable((observable) => {
+      verifyPasswordResetCode(this.auth, code)
+        .then((email) => {
+          observable.next(email);
+          observable.complete();
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          observable.error({ errorMessage, errorCode });
+        });
+    });
+  }
+
+  public confirmPasswordReset(
+    newPassword: string,
+    oobCode: string
+  ): Observable<void> {
+    return new Observable((observable) => {
+      confirmPasswordReset(this.auth, oobCode, newPassword)
         .then(() => {
           observable.next();
           observable.complete();

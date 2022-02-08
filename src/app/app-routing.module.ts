@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ConfirmPasswordRecoveryComponent } from '@modules/login/pages/confirm-password-recovery/confirm-password-recovery.component';
 import { LoginComponent } from '@modules/login/pages/login/login.component';
 import { RecoverPasswordComponent } from '@modules/login/pages/recover-password/recover-password.component';
 import { RegisterComponent } from '@modules/login/pages/register/register.component';
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
   { path: 'recover-password', component: RecoverPasswordComponent, canActivate: [LoginGuard] },
+  { path: 'confirm-password-recovery', component: ConfirmPasswordRecoveryComponent, canActivate: [LoginGuard] },
   { path: '', redirectTo: 'tasks', pathMatch: 'full' },
   {
     path: '',

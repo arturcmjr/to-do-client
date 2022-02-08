@@ -6,7 +6,7 @@
       <span class="page-title">register</span>
       <mat-form-field appearance="standard" [hideRequiredMarker]="true">
         <mat-label>Email</mat-label>
-        <input matInput placeholder="name@example.org" formControlName="email">
+        <input matInput placeholder="name@example.org" formControlName="email" type="email">
         <mat-icon matSuffix>email</mat-icon>
         <mat-error *ngIf="formHasError('email','required')">email is required</mat-error>
         <mat-error *ngIf="formHasError('email','email')">email must be valid</mat-error>
@@ -27,7 +27,10 @@
         <mat-error *ngIf="formHasError('confirmPassword','notMatching')">passwords do not match</mat-error>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" class="mt-3" type="submit" app-spinner-button [isLoading]="isLoading">register</button>
+      <mat-error *ngIf="errorText" class="text-center">{{errorText}}</mat-error>
+
+      <button mat-flat-button color="primary" class="mt-3" type="submit" app-spinner-button
+        [isLoading]="isLoading">register</button>
     </form>
   </mat-card>
 

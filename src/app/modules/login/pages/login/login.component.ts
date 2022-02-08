@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required]),
   });
-  public loginError: string | null = null;
+  public errorText: string | null = null;
   public isLoading = false;
 
   constructor(private auth: AuthService, private router: Router) {}
@@ -38,11 +38,12 @@ export class LoginComponent implements OnInit {
       next: (value) => {
         console.log(value);
         this.isLoading = false;
+        this.errorText = null;
         this.router.navigate(['/tasks']);
       },
       error: (message) => {
         // snackBar.open(message.errorCode, undefined, { duration: 3000, panelClass: ['mat-toolbar', 'mat-warn'] });
-        this.loginError = message.errorCode;
+        this.errorText = message.errorCode;
         this.isLoading = false;
       },
     });

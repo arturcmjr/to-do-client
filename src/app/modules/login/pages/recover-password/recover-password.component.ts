@@ -44,6 +44,7 @@ export class RecoverPasswordComponent implements OnInit {
         this.emailSent = true;
         this.startCountDown();
         this.isLoading = false;
+        this.errorText = null;
       },
       error: (message) => {
         console.log(this.emailControl);

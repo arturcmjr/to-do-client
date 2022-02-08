@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit {
       passwordMatch,
     ]),
   });
+  public errorText: string | null = null;
   public isLoading = false;
 
   constructor(private auth: AuthService, private router: Router) {}
@@ -47,8 +48,10 @@ export class RegisterComponent implements OnInit {
     this.auth.register(email,password).subscribe({next: () => {
       this.router.navigate(['/tasks']);
       this.isLoading = false;
+      this.errorText = null;
     },error: (error: any) => {
       this.isLoading = false;
+      this.errorText = error.errorCode;
       // TODO: show error
     }});
   }
