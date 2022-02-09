@@ -77,7 +77,6 @@ export class ToDosComponent implements OnInit {
     if (data) {
       switch (data.category) {
         case 'create':
-          console.log('create');
           this.onTaskCreate(data);
           break;
         case 'update':
@@ -153,7 +152,6 @@ export class ToDosComponent implements OnInit {
   }
 
   public drop(event: CdkDragDrop<ITask[]>): void {
-    console.log(event.container.id);
     const taskWasDone = event.previousContainer.id === 'doneList';
     const tasks = taskWasDone ? this.done : this.todo;
     const item = tasks[event.previousIndex];
@@ -180,7 +178,6 @@ export class ToDosComponent implements OnInit {
   }
 
   public markTaskAs(item: ITask, done: boolean, order: number = 0): void {
-    console.log(item);
     this.tasksService.markTaskAs(item, done).subscribe();
     window.setTimeout(() => {
       if (!done) {

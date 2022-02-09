@@ -33,7 +33,6 @@ export class ToDoDialogComponent {
   }
 
   public onSaveClick(): void {
-    console.log(this.taskForm);
     if (this.taskForm.invalid) {
       this.taskForm.markAllAsTouched();
       return;

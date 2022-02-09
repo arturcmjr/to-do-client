@@ -14,7 +14,10 @@ import { AuthService } from '@shared/services/auth/auth.service';
 })
 export class ConfirmPasswordRecoveryComponent implements OnInit {
   public confirmForm = new FormGroup({
-    password: new FormControl(null, [Validators.required]),
+    password: new FormControl(null, [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
     confirmPassword: new FormControl(null, [
       Validators.required,
       passwordMatch,
@@ -34,7 +37,6 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
       const { mode, oobCode } = params || {};
       if (oobCode && mode === 'resetPassword') this.code = oobCode;
       // TODO: handle wrong info
-      console.log({ mode, oobCode });
       this.validateCode();
     });
   }
@@ -53,12 +55,11 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
     if (!this.code) return;
     this.auth.verifyPasswordResetCode(this.code).subscribe({
       next: (email) => {
-        console.log(email);
         this.userEmail = email;
       },
-      error: (error) => {
-        this.errorText = error.errorCode;
+      error: (error: string) => {
         this.isLoading = false;
+        this.errorText = error;
       },
     });
   }
@@ -77,9 +78,9 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
         this.isLoading = false;
         this.errorText = null;
       },
-      error: (error: any) => {
+      error: (error: string) => {
         this.isLoading = false;
-        this.errorText = error.errorCode;
+        this.errorText = error;
       },
     });
   }

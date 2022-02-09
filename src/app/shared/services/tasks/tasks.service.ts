@@ -51,7 +51,6 @@ export class TasksService {
       const updates: any = {};
       updates['text'] = text;
       updates['date'] = date? this.getEpochUtc(date) : null;
-      console.log(updates);
 
       update(tasksRef, updates)
         .then(() => {
@@ -60,6 +59,7 @@ export class TasksService {
         })
         .catch((error: any) => {
           observable.error(error);
+          // TODO: handle error
         });
     });
   }
@@ -80,12 +80,10 @@ export class TasksService {
         (snapshot) => {
           const data = snapshot.val();
           const tasks = this.getTasksFromDb(data);
-          if (tasks.length === 0) console.log(tasksRef);
           observable.next(tasks);
           observable.complete();
         },
         (err) => {
-          console.log(err);
           // TODO: handle error
         }
       );
@@ -162,12 +160,6 @@ export class TasksService {
   }
 
   private getDbTask(task: ITask): IDbTask {
-    console.log('has date',!!task.date);
-    console.log({
-      text: task.text,
-      order: task.order,
-      date: task.date ? this.getEpochUtc(task.date) : null,
-    });
     return {
       text: task.text,
       order: task.order,

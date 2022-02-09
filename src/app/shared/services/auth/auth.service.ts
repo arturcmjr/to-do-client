@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { getFirebaseError } from '@shared/helpers/others/get-firebase-error';
 import {
   Auth,
   confirmPasswordReset,
@@ -10,7 +11,7 @@ import {
   signOut,
   verifyPasswordResetCode,
 } from 'firebase/auth';
-import { observable, Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FirebaseService } from '../firebase/firebase.service';
 
 @Injectable({
@@ -41,17 +42,14 @@ export class AuthService {
     return new Observable<void>((observable) => {
       signInWithEmailAndPassword(this.auth, email, password)
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
           observable.next();
           observable.complete();
-          console.log(user);
           // TODO: store data
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          observable.error({ errorMessage, errorCode });
+          observable.error(getFirebaseError(errorCode));
         });
     });
   }
@@ -75,14 +73,12 @@ export class AuthService {
       createUserWithEmailAndPassword(this.auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
           observable.next();
           observable.complete();
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          observable.error({ errorCode, errorMessage });
+          observable.error(getFirebaseError(errorCode));
         });
     });
   }
@@ -104,8 +100,7 @@ export class AuthService {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          observable.error({ errorMessage, errorCode });
+          observable.error(getFirebaseError(errorCode));
         });
     });
   }
@@ -119,8 +114,7 @@ export class AuthService {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          observable.error({ errorMessage, errorCode });
+          observable.error(getFirebaseError(errorCode));
         });
     });
   }
@@ -137,8 +131,7 @@ export class AuthService {
         })
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          observable.error({ errorMessage, errorCode });
+          observable.error(getFirebaseError(errorCode));
         });
     });
   }

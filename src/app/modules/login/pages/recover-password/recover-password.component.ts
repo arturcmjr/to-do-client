@@ -46,12 +46,9 @@ export class RecoverPasswordComponent implements OnInit {
         this.isLoading = false;
         this.errorText = null;
       },
-      error: (message) => {
-        console.log(this.emailControl);
-        console.log(message);
-        this.errorText = message.errorCode;
+      error: (error: string) => {
+        this.errorText = error;
         this.isLoading = false;
-        // TODO: implement universal unknown error
       },
     });
   }
