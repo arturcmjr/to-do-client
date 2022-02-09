@@ -6,6 +6,10 @@
   font-size: 3rem;
 }
 
+.app-title::after {
+  content: "My To Do";
+}
+
 mat-form-field {
   margin-bottom: 0.5rem;
 }

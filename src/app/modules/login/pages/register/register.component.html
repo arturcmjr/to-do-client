@@ -1,8 +1,9 @@
 <div fxLayout="row" fxLayoutAlign="center center" style="height: 100%;" class="login-wrapper">
   <mat-card style="width: 500px;">
     <form [formGroup]="registerForm" fxLayout="column" fxLayoutAlign="start stretch" (submit)="submit();">
-      <div class="app-title">My To Do</div>
+      <div class="app-title"></div>
       <span class="page-title">register</span>
+      
       <mat-form-field appearance="standard" [hideRequiredMarker]="true">
         <mat-label>Email</mat-label>
         <input matInput placeholder="name@example.org" formControlName="email" type="email">
