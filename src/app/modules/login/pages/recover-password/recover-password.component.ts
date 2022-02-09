@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { AuthService } from '@shared/services/auth/auth.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { AuthService } from '@shared/services/auth/auth.service';
     '../login/login.component.scss',
   ],
 })
-export class RecoverPasswordComponent implements OnInit {
+export class RecoverPasswordComponent {
   public emailControl = new FormControl(null, [
     Validators.email,
     Validators.required,
@@ -20,9 +21,9 @@ export class RecoverPasswordComponent implements OnInit {
   public countDownTimer: number = 0;
   public isLoading = false;
 
-  constructor(private auth: AuthService) {}
-
-  ngOnInit(): void {}
+  constructor(private auth: AuthService, private titleService: Title) {
+    titleService.setTitle('Recover Password');
+  }
 
   public formHasError(error?: string): boolean {
     const control = this.emailControl;

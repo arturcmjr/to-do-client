@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { passwordMatch } from '@shared/helpers/validators/password-match';
 import { AuthService } from '@shared/services/auth/auth.service';
@@ -31,8 +32,10 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private titleService: Title,
   ) {
+    titleService.setTitle('Password Recovery');
     activatedRoute.queryParams.subscribe((params) => {
       const { mode, oobCode } = params || {};
       if (oobCode && mode === 'resetPassword') this.code = oobCode;

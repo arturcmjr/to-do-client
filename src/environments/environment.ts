@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  appName: 'My To Do',
   firebaseConfig: {
     apiKey: "AIzaSyCzoAvaNsFrEkFOw2OF24Yyf1Q74RFQtic",
     authDomain: "arju-todo.firebaseapp.com",

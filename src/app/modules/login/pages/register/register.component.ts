@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '@shared/services/auth/auth.service';
 import { passwordMatch } from '@shared/helpers/validators/password-match';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { environment } from '@env';
 
 @Component({
   selector: 'app-register',
@@ -21,13 +23,14 @@ export class RegisterComponent implements OnInit {
   public errorText: string | null = null;
   public isLoading = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private titleService: Title) {}
 
   ngOnInit(): void {
     const { confirmPassword, password } = this.registerForm.controls;
     password?.valueChanges.subscribe(() => {
       confirmPassword.updateValueAndValidity();
     });
+    this.titleService.setTitle('Register');
   }
 
   public formHasError(controlName: string, error?: string): boolean {
