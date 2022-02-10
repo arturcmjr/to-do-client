@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@shared/services/auth/auth.service';
 import {
   child,
@@ -19,47 +20,68 @@ import { IDbTask, ITask } from './tasks.interface';
 })
 export class TasksService {
   private database: Database;
-  // private user: User | null = null;
 
-  constructor(private firebase: FirebaseService, private auth: AuthService) {
+  constructor(
+    private firebase: FirebaseService,
+    private auth: AuthService,
+    private snackBar: MatSnackBar
+  ) {
     this.database = firebase.getDataBase();
-    // const fbAuth = auth.getFirebaseAuth();
-    // fbAuth.onAuthStateChanged((user) => (this.user = user));
+  }
+
+  public showError(): void {
+    // showing generic error for a while
+    this.snackBar.open('something went wrong', undefined, {
+      panelClass: ['mat-toolbar', 'mat-warn'],
+      duration: 2000,
+    });
   }
 
   public createTodo(text: string, date?: Date): Observable<ITask> {
     return new Observable<ITask>((observable) => {
       const dbRef = ref(this.database, `tasks/${this.auth.getUserUid()}/todo`);
       const epochDate = date ? this.getEpochUtc(date) : undefined;
-      push(dbRef, { text, date: epochDate ?? null, order: 0 }).then((task) => {
-        observable.next({
-          text,
-          date,
-          id: task.key ?? '',
-          order: 0,
+      push(dbRef, { text, date: epochDate ?? null, order: 0 })
+        .then((task) => {
+          observable.next({
+            text,
+            date,
+            id: task.key ?? '',
+            order: 0,
+          });
+          observable.complete();
+        })
+        .catch((error) => {
+          this.showError();
+          observable.error(error);
         });
-        observable.complete();
-      });
-      // TODO: handle error
     });
   }
 
-  public updateTask(done: boolean, taskId: string, text: string, date?: Date): Observable<void> {
+  public updateTask(
+    done: boolean,
+    taskId: string,
+    text: string,
+    date?: Date
+  ): Observable<void> {
     return new Observable<void>((observable) => {
-      const tasksRef = ref(this.database, `${this.getDbTasksPath(done)}/${taskId}`);
+      const tasksRef = ref(
+        this.database,
+        `${this.getDbTasksPath(done)}/${taskId}`
+      );
 
       const updates: any = {};
       updates['text'] = text;
-      updates['date'] = date? this.getEpochUtc(date) : null;
+      updates['date'] = date ? this.getEpochUtc(date) : null;
 
       update(tasksRef, updates)
         .then(() => {
           observable.next();
           observable.complete();
         })
-        .catch((error: any) => {
+        .catch((error) => {
+          this.showError();
           observable.error(error);
-          // TODO: handle error
         });
     });
   }
@@ -83,8 +105,9 @@ export class TasksService {
           observable.next(tasks);
           observable.complete();
         },
-        (err) => {
-          // TODO: handle error
+        (error) => {
+          this.showError();
+          observable.error(error);
         }
       );
     });
@@ -97,11 +120,15 @@ export class TasksService {
         `${this.getDbTasksPath(done)}/${taskId}`
       );
 
-      remove(tasksRef).then(() => {
-        observable.next();
-        observable.complete();
-      });
-      // TODO: handle error
+      remove(tasksRef)
+        .then(() => {
+          observable.next();
+          observable.complete();
+        })
+        .catch((error) => {
+          this.showError();
+          observable.error(error);
+        });
     });
   }
 
@@ -115,11 +142,15 @@ export class TasksService {
         updates[`${id}/order`] = i;
       }
 
-      update(tasksRef, updates).then(() => {
-        observable.next();
-        observable.complete();
-      });
-      // TODO: handle error
+      update(tasksRef, updates)
+        .then(() => {
+          observable.next();
+          observable.complete();
+        })
+        .catch((error) => {
+          this.showError();
+          observable.error(error);
+        });
     });
   }
 
@@ -133,11 +164,15 @@ export class TasksService {
       updates[`${currentContainer}/${task.id}`] = null;
       updates[`${targetContainer}/${task.id}`] = this.getDbTask(task);
 
-      update(dbRef, updates).then(() => {
-        observable.next();
-        observable.complete();
-      });
-      // TODO: handle error
+      update(dbRef, updates)
+        .then(() => {
+          observable.next();
+          observable.complete();
+        })
+        .catch((error) => {
+          this.showError();
+          observable.error(error);
+        });
     });
   }
 

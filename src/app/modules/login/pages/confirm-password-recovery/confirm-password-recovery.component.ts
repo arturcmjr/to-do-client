@@ -33,14 +33,15 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
     private auth: AuthService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private titleService: Title,
+    private titleService: Title
   ) {
     titleService.setTitle('Password Recovery');
     activatedRoute.queryParams.subscribe((params) => {
       const { mode, oobCode } = params || {};
-      if (oobCode && mode === 'resetPassword') this.code = oobCode;
-      // TODO: handle wrong info
-      this.validateCode();
+      if (oobCode && mode === 'resetPassword') {
+        this.code = oobCode;
+        this.validateCode();
+      } else this.errorText = 'Link is not valid';
     });
   }
 

@@ -42,10 +42,8 @@ export class AuthService {
     return new Observable<void>((observable) => {
       signInWithEmailAndPassword(this.auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
           observable.next();
           observable.complete();
-          // TODO: store data
         })
         .catch((error) => {
           const errorCode = error.code;

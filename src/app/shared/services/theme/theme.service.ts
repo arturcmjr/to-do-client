@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const STORAGE_KEY = 'use_dark_theme';
+const STORAGE_KEY = 'user_theme';
 
 export type Theme = "light" | "dark" | "system";
 
