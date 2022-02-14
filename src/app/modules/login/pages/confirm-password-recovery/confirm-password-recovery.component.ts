@@ -41,7 +41,7 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
       if (oobCode && mode === 'resetPassword') {
         this.code = oobCode;
         this.validateCode();
-      } else this.errorText = 'Link is not valid';
+      } else this.errorText = 'Parameters are not valid';
     });
   }
 

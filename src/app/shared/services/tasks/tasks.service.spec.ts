@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { TasksService } from './tasks.service';
@@ -8,7 +9,7 @@ describe('TasksService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule]
+      imports: [RouterTestingModule, MatSnackBarModule]
     });
     service = TestBed.inject(TasksService);
   });

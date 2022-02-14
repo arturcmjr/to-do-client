@@ -7,6 +7,7 @@ import {
   waitForAsync,
 } from '@angular/core/testing';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By, Title } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -37,7 +38,7 @@ describe('ToDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NoopAnimationsModule, MatDialogModule, RouterTestingModule],
+      imports: [NoopAnimationsModule, MatDialogModule, RouterTestingModule, MatSnackBarModule],
       declarations: [ToDosComponent],
       providers: [{ provide: TasksService, useClass: MockTasksService },]
     }).compileComponents();
