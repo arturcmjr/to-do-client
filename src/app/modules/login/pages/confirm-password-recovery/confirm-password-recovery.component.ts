@@ -45,7 +45,12 @@ export class ConfirmPasswordRecoveryComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const { confirmPassword, password } = this.confirmForm.controls;
+    password?.valueChanges.subscribe(() => {
+      confirmPassword.updateValueAndValidity();
+    });
+  }
 
   public formHasError(controlName: string, error?: string): boolean {
     const control = this.confirmForm.controls[controlName];

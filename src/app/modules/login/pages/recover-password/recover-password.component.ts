@@ -34,7 +34,7 @@ export class RecoverPasswordComponent {
   }
 
   public submit(): void {
-    if (this.emailControl.invalid) {
+    if (this.emailControl.invalid || this.countDownTimer > 0) {
       this.emailControl.markAllAsTouched();
       return;
     }
