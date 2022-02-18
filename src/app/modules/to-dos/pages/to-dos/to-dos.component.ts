@@ -20,6 +20,7 @@ import {
 } from '@modules/to-dos/components/to-do-dialog/to-do-dialog.component';
 import { combineLatest } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { environment } from '@env';
 
 export const fadeAnimation = trigger('fadeAnimation', [
   transition(':enter', [
@@ -58,6 +59,7 @@ export class ToDosComponent implements OnInit {
 
   public ngOnInit(): void {
     this.fetchData();
+    this.updateTitle();
   }
 
   public ngDoCheck(): void {
@@ -130,7 +132,9 @@ export class ToDosComponent implements OnInit {
   }
 
   private updateTitle(): void {
-    this.titleService.setTitle(`To Do (${this.todo.length})`);
+    if(this.todo.length > 0) {
+      this.titleService.setTitle(`To Do (${this.todo.length})`);
+    } else this.titleService.setTitle(environment.appName);
   }
 
   private fetchData(): void {
@@ -188,10 +192,5 @@ export class ToDosComponent implements OnInit {
       this.saveOrder(true);
       this.saveOrder(false);
     }, 0);
-  }
-
-  public getRelativeTime(date: Date): string | null {
-    const dateTime = DateTime.fromJSDate(date);
-    return dateTime.toRelative();
   }
 }
