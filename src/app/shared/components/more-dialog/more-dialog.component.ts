@@ -28,10 +28,6 @@ export class MoreDialogComponent {
     });
   }
 
-  public isDarkTheme(): boolean {
-    return !document.body.classList.contains('app-light-theme');
-  }
-
   public changeTheme(): void {
     this.bottomSheet.open(ThemeSheetComponent);
   }

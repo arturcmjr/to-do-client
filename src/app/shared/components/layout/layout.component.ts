@@ -13,12 +13,7 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  toggleTheme(): void {
-    document.body.classList.toggle('app-light-theme');
-  }
-
   public openMoreDialog() : void {
-    const dialogRef = this.dialog.open(MoreDialogComponent);
-    // dialogRef.
+    this.dialog.open(MoreDialogComponent);
   }
 }

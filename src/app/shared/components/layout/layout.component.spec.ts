@@ -24,4 +24,11 @@ describe('LayoutComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call openMoreDialog on button click', () => {
+    const functionMock = spyOn<any>(component, 'openMoreDialog');
+    const button = document.getElementsByTagName('button')[0] as HTMLElement;
+    button.click();
+    expect(functionMock).toHaveBeenCalled();
+  });
 });

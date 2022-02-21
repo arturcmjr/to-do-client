@@ -15,7 +15,7 @@
     <mat-label>Date</mat-label>
     <input matInput [matDatepicker]="picker" formControlName="date">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker [touchUi]="isMobile()" #picker></mat-datepicker>
+    <mat-datepicker [touchUi]="isMobileDevice" #picker></mat-datepicker>
     <mat-error *ngIf="formHasError('date','matDatepickerParse')">Date is not valid</mat-error>
   </mat-form-field>
 </div>

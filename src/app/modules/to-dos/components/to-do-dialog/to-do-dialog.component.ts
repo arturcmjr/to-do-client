@@ -18,6 +18,7 @@ export interface ITasksDialogResult {
 })
 export class ToDoDialogComponent {
   public title: string;
+  public isMobileDevice: boolean;
   public taskForm = new FormGroup({
     text: new FormControl(null, Validators.required),
     date: new FormControl(),
@@ -30,6 +31,7 @@ export class ToDoDialogComponent {
     this.taskForm.get('text')?.setValue(data?.text);
     this.taskForm.get('date')?.setValue(data?.date);
     this.title = data?.id? 'Edit Task' : 'Create Task';
+    this.isMobileDevice = isMobileDevice();
   }
 
   public onSaveClick(): void {
@@ -65,9 +67,5 @@ export class ToDoDialogComponent {
       (control.touched || control.dirty) &&
       (error ? control.hasError(error) : control.invalid)
     );
-  }
-
-  public isMobile(): boolean {
-    return isMobileDevice();
   }
 }

@@ -1,6 +1,8 @@
 import {
   ComponentFixture,
+  discardPeriodicTasks,
   fakeAsync,
+  flush,
   TestBed,
   tick,
 } from '@angular/core/testing';
@@ -242,6 +244,8 @@ describe('ToDosComponent', () => {
     const wrapper = todoContainer?.getElementsByClassName('task-wrapper')[0];
     const checkBoxLabelEl = wrapper?.firstChild?.firstChild as HTMLInputElement;
     checkBoxLabelEl.click();
+    discardPeriodicTasks();
+    flush();
     expect(clickMock).toHaveBeenCalledWith(task, true);
   }));
 });
