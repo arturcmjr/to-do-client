@@ -65,4 +65,16 @@ describe('TasksService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should get epoch data on utc', () => {
+    const epoch = service["getEpochUtc"](new Date('2022-01-01'));
+    expect(epoch).toBe(1641006000000);
+  });
+
+  it('should get date from epoch utc', () => {
+    const compareDate = new Date('2022-01-01');
+    const epoch = 1641006000000;
+    const date = service["getLocalDate"](epoch);
+    expect(date).toEqual(compareDate);
+  });
 });

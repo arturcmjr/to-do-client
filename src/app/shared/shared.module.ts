@@ -7,8 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { RelativeTimeStampPipe } from './pipes/relative-time-stamp/relative-time-stamp.pipe';
-import { TimeStampPipe } from './pipes/time-stamp/time-stamp.pipe';
+import { TimeStampPipe } from './pipes/date-format/date-format.pipe';
 import { MoreDialogComponent } from './components/more-dialog/more-dialog.component';
 import { SpinnerButtonDirective } from './directives/spinner-button.directive';
 import { ThemeSheetComponent } from './components/theme-sheet/theme-sheet.component';
@@ -18,7 +17,6 @@ import { ThemeSheetComponent } from './components/theme-sheet/theme-sheet.compon
 @NgModule({
   declarations: [
     LayoutComponent,
-    RelativeTimeStampPipe,
     TimeStampPipe,
     MoreDialogComponent,
     SpinnerButtonDirective,
@@ -39,7 +37,6 @@ import { ThemeSheetComponent } from './components/theme-sheet/theme-sheet.compon
     BrowserAnimationsModule,
     BrowserModule,
     RouterModule,
-    RelativeTimeStampPipe,
     TimeStampPipe,
     MoreDialogComponent,
     SpinnerButtonDirective,

@@ -55,15 +55,27 @@ export class MockAuthService extends AuthService {
 
 describe('AuthService', () => {
   let service: AuthService;
+  let storageKey: string;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
     });
     service = TestBed.inject(AuthService);
+    storageKey = service["uidStorageKey"];
+    localStorage.removeItem(storageKey);
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should not be logged in if has no user id stored', () => {
+    expect(service.isLoggedIn()).toBeFalse();
+  });
+
+  it('should be logged in if has user id stored', () => {
+    localStorage.setItem(storageKey,'some_uid');
+    expect(service.isLoggedIn()).toBeTrue();
   });
 });
