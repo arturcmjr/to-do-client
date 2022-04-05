@@ -15,7 +15,7 @@ I designed this app to be simple and functional so I could show some of my skill
 - Persistent data
 - Login with email
 
-## Libraries
+## Libraries and Frameworks
 - [Angular](https://angular.io/) 13.0.4 
 - [Angular Material](https://material.angular.io/) for layout
 - [Angular Flex Layout](https://github.com/angular/flex-layout) for responsibility
