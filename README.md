@@ -27,3 +27,4 @@ I designed this app to be simple and functional so I could show some of my skill
 - Firebase Realtime Database and Authentication as BAAS
 - Unit tests for core functionalities
 - Use of services, pipelines, directives, guards, and others Angular Framework features
+- PWA support, so the web app can be installed and behave almost like a native app

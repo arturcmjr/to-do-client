@@ -8,7 +8,7 @@
         <mat-card cdkDropList id="todoList" [cdkDropListData]="todo" class="tasks-list"
             [@.disabled]="disableListAnimation" (cdkDropListDropped)="drop($event)"
             [cdkDropListConnectedTo]="['doneList']">
-            <div *ngIf="todo.length === 0 && !isLoading" @fadeAnimation class="empty-info">Nothing to be done here 😎, how about adding a new task!? 😄</div>
+            <div *ngIf="todo.length === 0 && !isLoading" @fadeAnimation class="empty-info">Nothing to be done here, how about adding a new task!?</div>
             <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center" class="my-2">
                 <mat-spinner strokeWidth="3" diameter="50"></mat-spinner>
             </div>
