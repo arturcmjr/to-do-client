@@ -5,7 +5,7 @@ A simple web app that helps to manage tasks that need to be done.
 
 I designed this app to be simple and functional so I could show some of my skills with the Angular framework. You can check the live demo bellow:
 
-[live demo](https://arju-todo.web.app/).
+[live demo](https://todo.arju.dev/).
 
 ## Features
 - Dark / Light theme
