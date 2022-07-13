@@ -29,5 +29,9 @@ export class ThemeService {
       isDark = window.matchMedia('(prefers-color-scheme: dark)')?.matches;
     }
     document.body.classList.toggle('app-light-theme', !isDark);
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
+    if(themeMeta) {
+      themeMeta.setAttribute('content', isDark ? '#1f1f1f' :'#8bc34a');
+    }
   }
 }
